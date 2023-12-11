@@ -34,8 +34,8 @@ class Menu extends StatelessWidget {
               icon: Icon(Icons.festival),
             ),
             Tab(
-              text: "MY Events",
-              icon: Icon(Icons.event),
+              text: "Activity",
+              icon: Icon(Icons.directions_run),
             ),
             Tab(
               text: "Media",

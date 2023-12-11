@@ -4,6 +4,8 @@ import Event from "../models/eventModel.js";
 import streamifier from "streamifier";
 import cloudinary from "cloudinary";
 import { query } from "express";
+import Order from "../models/orderModel.js";
+import User from "../models/userModel.js";
 
 async function uploadImage(image, folder_name) {
     return new Promise((resolve, reject) => {
@@ -178,6 +180,17 @@ async function deleteEvent(req, res, next) {
         const event = await Event.findById(req.body.id);
         await cloudinary.v2.uploader.destroy(event.poster.public_id);
         await Event.findByIdAndDelete(req.body.id);
+        const orders = await Order.find({ event: req.body.id });
+        for (let i = 0; i < orders.length; i++) {
+            const order = orders[i];
+            for (let j = 0; j < order.team.length; j++) {
+                const userId = order.team[j].user;
+                const user = await User.findById(userId);
+                user.myEvents = user.myEvents.filter((userorder) => userorder.toString() != order._id.toString());
+                await User.findByIdAndUpdate(userId, user);
+            }
+        }
+        await Order.deleteMany({ event: req.body.id });
         res.send({ success: true });
     } catch (e) {
         console.log(e.message);

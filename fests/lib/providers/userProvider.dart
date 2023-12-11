@@ -163,6 +163,9 @@ class usersNotifier extends StateNotifier<List<User>> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      if (response["resent"]) {
+        ref.read(OrdersProvider.notifier).getAllOrders(userId);
+      }
     } else {
       Fluttertoast.cancel();
       Fluttertoast.showToast(
@@ -194,19 +197,31 @@ class usersNotifier extends StateNotifier<List<User>> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      ref.read(OrdersProvider.notifier).getAllOrders(userId);
+    } else {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+        msg: response["message"],
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        timeInSecForIosWeb: 5,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
   Future<void> rejectRequest(String orderId, String userId) async {
     final response = await http.delete(
       "$baseUrl/user/request",
-      "multipart/form-data'",
+      "application/json",
       {"orderId": orderId, "userId": userId},
     );
     if (response!["success"]) {
       Fluttertoast.cancel();
       Fluttertoast.showToast(
-        msg: "accepted request",
+        msg: "requesst rejected",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
@@ -214,8 +229,24 @@ class usersNotifier extends StateNotifier<List<User>> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      ref.read(OrdersProvider.notifier).getAllOrders(userId);
+    } else {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+        msg: response["message"],
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        timeInSecForIosWeb: 5,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
+
+  // Future<void> resendRequest() {
+
+  // }
 }
 
 final allUsersProvider =

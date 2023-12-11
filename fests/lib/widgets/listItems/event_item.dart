@@ -163,7 +163,8 @@ class EventItem extends ConsumerWidget {
                               radius: 20,
                               child: SubHeading(str: "${index + 1}"),
                             ),
-                            title: SubHeading(str: event.details[index]),
+                            title: SubHeading(
+                                str: event.details[index], fontSize: 14),
                           );
                         },
                       ),
@@ -309,7 +310,8 @@ class EventItem extends ConsumerWidget {
                     : SizedBox(
                         width: double.infinity,
                         child: SubHeading(
-                          str: "alredy registered for this event",
+                          str:
+                              "alredy registered or you have requests for this event",
                           color: Colors.red,
                           align: TextAlign.center,
                         ),

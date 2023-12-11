@@ -3,21 +3,36 @@ import 'package:fests/models/order.dart';
 import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/orders/userScreens/serchTeam.dart';
+import 'package:fests/widgets/listItems/useritems/orderuser_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
 
 //TODO: addd approve reject from admin side
 
-class OrderItem extends ConsumerWidget {
-  OrderItem(this.order, {super.key});
+class OrderItem extends ConsumerStatefulWidget {
+  OrderItem(this.order, this.isEqualWaiting, {super.key});
   Order order;
-  late Event event = order.event;
+  bool isEqualWaiting;
+  @override
+  ConsumerState<OrderItem> createState() => _OrderItemState();
+}
+
+class _OrderItemState extends ConsumerState<OrderItem>
+    with SingleTickerProviderStateMixin {
+  late Event event = widget.order.event;
+  late Order order = widget.order;
+
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 3);
+  }
 
   String formattedDateTime(DateTime item) {
     return item.hour >= 12
@@ -28,18 +43,94 @@ class OrderItem extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final user = ref.read(userProvider);
+    bool isEqualWaiting = widget.isEqualWaiting;
+    @override
+    void dispose() {
+      _tabController.dispose();
+      super.dispose();
+    }
+
     List<Widget> accepted = [];
     List<Widget> rejected = [];
     List<Widget> waiting = [];
     for (final teamMember in order.team) {
       if (teamMember.values.first == "waiting") {
-        waiting.add(Heading(str: teamMember.keys.first.name));
+        waiting.add(OrderUserItem(
+            user: teamMember.keys.first,
+            trailing: Container(
+              height: 0,
+              width: 0,
+            )));
       } else if (teamMember.values.first == "accepted") {
-        accepted.add(Heading(str: teamMember.keys.first.name));
+        accepted.add(
+          OrderUserItem(
+            user: teamMember.keys.first,
+            trailing: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.white)),
+                      title: Heading(str: "Are You Sure?"),
+                      shadowColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      content: SubHeading(
+                          str:
+                              "this person will be removed out of the team.\nuse this only when nessasary"),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: SubHeading(
+                              str: "Cancel",
+                              color: Colors.red,
+                            )),
+                        TextButton(
+                            onPressed: () {
+                              ref.read(allUsersProvider.notifier).rejectRequest(
+                                  order.id, teamMember.keys.first.id);
+                              Navigator.of(context).pop();
+                            },
+                            child: SubHeading(
+                              str: "Confirm",
+                              color: Colors.green,
+                            ))
+                      ]),
+                );
+              },
+              child: isEqualWaiting
+                  ? Container(width: 0, height: 0)
+                  : SubHeading(
+                      fontSize: 12,
+                      str: "Remove",
+                      color: Colors.red,
+                    ),
+            ),
+          ),
+        );
       } else if (teamMember.values.first == "rejected") {
-        rejected.add(Heading(str: teamMember.keys.first.name));
+        rejected.add(
+          OrderUserItem(
+            user: teamMember.keys.first,
+            trailing: isEqualWaiting
+                ? Container(width: 0, height: 0)
+                : TextButton(
+                    onPressed: () async {
+                      await ref
+                          .read(allUsersProvider.notifier)
+                          .sendRequest(order.id, teamMember.keys.first.id);
+                    },
+                    child: SubHeading(
+                      fontSize: 12,
+                      str: "Resend\nRequest",
+                      color: Colors.green,
+                    ),
+                  ),
+          ),
+        );
       }
     }
     void viewSchedule() {
@@ -81,6 +172,14 @@ class OrderItem extends ConsumerWidget {
           );
         },
       );
+    }
+
+    void _acceptRequest() {
+      ref.read(allUsersProvider.notifier).acceptRequest(order.id, user!.id);
+    }
+
+    void _rejectRequest() {
+      ref.read(allUsersProvider.notifier).rejectRequest(order.id, user!.id);
     }
 
     DateTime startDate = event.scedule.first[0];
@@ -159,33 +258,58 @@ class OrderItem extends ConsumerWidget {
                               radius: 20,
                               child: SubHeading(str: "${index + 1}"),
                             ),
-                            title: SubHeading(str: event.details[index]),
+                            title: SubHeading(
+                              str: event.details[index],
+                              fontSize: 14,
+                            ),
                           );
                         },
                       ),
                     ),
                   ],
                 ),
-                ExpansionTile(
-                  title: SubHeading(
-                    str: "Accepted",
-                    color: Colors.green,
+                new TabBar(
+                    indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).primaryColor),
+                    controller: _tabController,
+                    isScrollable: false,
+                    tabs: [
+                      Tab(
+                        child: SubHeading(
+                          str: "Accepted",
+                          color: Colors.green,
+                        ),
+                      ),
+                      Tab(
+                        child: SubHeading(
+                          str: "Waiting",
+                          color: Colors.yellow,
+                        ),
+                      ),
+                      Tab(
+                        child: SubHeading(
+                          str: "Rejected",
+                          color: Colors.red,
+                        ),
+                      )
+                    ]),
+                Container(
+                  height: 200,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(children: accepted),
+                      ),
+                      SingleChildScrollView(
+                        child: Column(children: waiting),
+                      ),
+                      SingleChildScrollView(
+                        child: Column(children: rejected),
+                      )
+                    ],
                   ),
-                  children: accepted,
-                ),
-                ExpansionTile(
-                  title: SubHeading(
-                    str: "Waiting",
-                    color: Colors.yellow,
-                  ),
-                  children: waiting,
-                ),
-                ExpansionTile(
-                  title: SubHeading(
-                    str: "Rejected",
-                    color: Colors.red,
-                  ),
-                  children: rejected,
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -275,8 +399,7 @@ class OrderItem extends ConsumerWidget {
                   ],
                 ),
                 SizedBox(height: 5),
-                ref.read(OrdersProvider.notifier).getUserStatus(order, user!) ==
-                        "waiting"
+                isEqualWaiting
                     ? Row(
                         children: [
                           Expanded(
@@ -284,7 +407,7 @@ class OrderItem extends ConsumerWidget {
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: _acceptRequest,
                                 child: Heading(
                                   str: "Accept",
                                   fontSize: 28,
@@ -303,7 +426,7 @@ class OrderItem extends ConsumerWidget {
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: _rejectRequest,
                                 child: Heading(
                                   str: "Reject",
                                   fontSize: 28,

@@ -1,6 +1,4 @@
-import 'package:fests/models/order.dart';
 import 'package:fests/models/user.dart';
-import 'package:fests/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
@@ -30,7 +28,7 @@ class _UserItemState extends ConsumerState<OrderUserItem> {
           radius: 30,
         ),
         minVerticalPadding: 10,
-        tileColor: Theme.of(context).colorScheme.primary,
+        tileColor: Theme.of(context).colorScheme.background,
         title: Heading(
           str: widget.user.name,
           fontSize: 18,

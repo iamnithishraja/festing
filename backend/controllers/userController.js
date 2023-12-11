@@ -170,6 +170,15 @@ async function sendRequest(req, res, next) {
     try {
         // order id user id
         const order = await Order.findById(req.body.orderId);
+        const idx = order.team.findIndex((member) => member.user.toString() == req.body.userId);
+        if (idx != -1) {
+            order.team[idx].status = "waiting";
+            const user = await User.findById(req.body.userId);
+            user.myEvents.push(order._id);
+            await Order.findByIdAndUpdate(req.body.orderId, order);
+            await User.findByIdAndUpdate(req.body.userId, user);
+            return res.json({ success: true, resent: true });
+        }
         order.team.push({ user: req.body.userId });
         const user = await User.findById(req.body.userId);
         user.myEvents.push(order._id);
@@ -186,48 +195,53 @@ async function sendRequest(req, res, next) {
 
 async function acceptRequest(req, res, next) {
     try {
-        const order = await Order.findById(req.body.OrderId).populate("User").populate("Event");
-        const currTeamSize = order.team.filter((member) => member.status == "accepted").length;
-        if (order.event.teamSize == currTeamSize) {
-            res.json({ success: "false", message: "team size is maximum" });
-            next();
-        }
-        for (var i = 0; i < order.team.length; i++) {
-            if (order.team[i].user._id == req.body.userId) {
-                order.team[i].status = "accepted";
-            }
+        const order = await Order.findById(req.body.orderId)
+            .populate("team.user")
+            .populate("event");
+
+        const currTeamSize = order.team.filter((member) => member.status === "accepted").length;
+        if (order.event.teamSize === currTeamSize) {
+            return res.json({ success: false, message: "team size is maximum" });
         }
 
-        await Order.findByIdAndUpdate(req.body.OrderId, order);
+        const userIndex = order.team.findIndex((member) => member.user._id == req.body.userId);
+        if (userIndex !== -1) {
+            order.team[userIndex].status = "accepted";
+        }
+
+        await Order.findByIdAndUpdate(req.body.orderId, order);
         res.json({ success: true });
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.json({ success: false });
     }
 }
 
-async function rejectRequest(req, res, next) {
+const rejectRequest = async (req, res, next) => {
     try {
-        //order id user id
-        const order = await Order.findById(req.body.OrderId);
-        for (var i = 0; i < order.team.length; i++) {
-            if (order.team[i].user == req.body.userId) {
-                order.team[i].status = "rejected";
+        const orderId = req.body.orderId;
+        const userId = req.body.userId;
+
+        const order = await Order.findById(orderId);
+
+        order.team.forEach(teamMember => {
+            if (teamMember.user == userId) {
+                teamMember.status = 'rejected';
             }
-        }
+        });
 
-        const user = await User.findById(req.body.userId);
-        user.myEvents = user.myEvents.filter((event) => event != order._id);
+        const user = await User.findById(userId);
+        user.myEvents = user.myEvents.filter(event => event.toString() !== order._id.toString());
 
-
-        await Order.findByIdAndUpdate(req.body.OrderId, order);
-        await User.findByIdAndUpdate(req.body.userId, user);
+        await Order.findByIdAndUpdate(orderId, order);
+        await User.findByIdAndUpdate(userId, user);
 
         res.json({ success: true });
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.json({ success: false });
     }
-}
+};
+
 
 export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout };

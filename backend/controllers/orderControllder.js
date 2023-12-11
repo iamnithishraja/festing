@@ -26,26 +26,22 @@ async function getAllOrders(req, res, next) {
         const user = await User.findById(req.params.id);
         const myEvents = user.myEvents;
         const orders = [];
-        const date = new Date();
-        const now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-        console.log(now_utc);
-        
+
         for (let i = 0; i < myEvents.length; i++) {
             const order = await Order.findById(myEvents[i]).populate("team.user").populate("event");
-
-            if (new Date(order.event["schedule"][order.event["schedule"].length - 1][1]) >= new Date(now_utc)) {
-                orders.push(order);
-            }
+            orders.push(order);
         }
+        orders.sort((a, b) => a.event["schedule"][0][0] - b.event["schedule"][0][0]);
         res.json({ success: true, orders });
     } catch (err) {
         console.log(err.message);
         res.json({ success: false });
     }
 }
+
 async function resendRequest(req, res, next) {
     try {
-        const order = await Order.findById(req.body.OrderId);
+        const order = await Order.findById(req.body.orderId);
         for (var i = 0; i < order.team.length; i++) {
             if (order.team[i].user == req.body.userId) {
                 order.team[i].status = "waiting";

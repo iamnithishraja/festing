@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:fests/models/order.dart';
 import 'package:fests/models/user.dart';
+import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/utils/debouncer.dart';
 import 'package:fests/widgets/listItems/useritems/user_tem.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -127,6 +128,9 @@ class _serchTeamMatesState extends ConsumerState<serchTeamMates> {
                     textColor: Colors.white,
                     fontSize: 16.0,
                   );
+                  ref
+                      .read(OrdersProvider.notifier)
+                      .getAllOrders(ref.watch(userProvider)!.id);
                 },
                 child: Heading(
                   str: "Finish Up",

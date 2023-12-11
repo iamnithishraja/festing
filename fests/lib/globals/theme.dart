@@ -6,7 +6,6 @@ class AppTheme {
     return ThemeData.dark().copyWith(
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: Colors.white,
-        
       ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color.fromRGBO(15, 15, 15, 0.6),
@@ -19,7 +18,6 @@ class AppTheme {
         elevation: 8.0,
         shadowColor: Colors.blueGrey,
       ),
-      
       textTheme: TextTheme().copyWith(
         titleLarge: GoogleFonts.roboto(
           color: Colors.white,
