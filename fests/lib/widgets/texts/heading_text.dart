@@ -17,6 +17,7 @@ class Heading extends StatelessWidget {
     return Text(
       str,
       textAlign: alignment,
+      overflow: TextOverflow.ellipsis,
       style: Theme.of(context).textTheme.titleLarge!.copyWith(
             fontSize: fontSize,
             color: color,

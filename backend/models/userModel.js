@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  bio: String,
   myEvents: [
     {
       type: mongoose.Schema.ObjectId,
@@ -50,7 +51,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-
+  socialLinks: {
+    github: String,
+    linkdlin: String,
+    codingPlatform: String,
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });

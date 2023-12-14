@@ -94,6 +94,9 @@ class orderNotifier extends StateNotifier<List<Order>> {
               name: member["user"]["name"],
               email: member["user"]["email"],
               rollno: member["user"]["rollno"],
+              avatar: (member["user"]["avatar"] != null)
+                  ? member["user"]["avatar"]["url"]
+                  : null,
               role: member["user"]["role"]);
           final status = member["status"];
           team.add({user: status});

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:fests/models/order.dart';
-import 'package:fests/models/user.dart';
 import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/utils/debouncer.dart';
 import 'package:fests/widgets/listItems/useritems/user_tem.dart';
@@ -13,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class serchTeamMates extends ConsumerStatefulWidget {
   serchTeamMates(this.order, {super.key});
-  Order order;
+  final Order order;
   @override
   ConsumerState<serchTeamMates> createState() => _serchTeamMatesState();
 }

@@ -98,7 +98,7 @@ async function updateFest(req, res, next) {
     try {
         const fest = await Fest.findById(req.body.id);
         if (req.files != null) {
-            await cloudinary.v2.uploader.destroy(fest.poster.public_id);
+            cloudinary.v2.uploader.destroy(fest.poster.public_id);
             req.body.poster = await uploadImage(req.files.poster.data, fest.poster.public_id.split("/")[0]);
         }
         const new_fest = await Fest.findByIdAndUpdate(req.body.id, req.body);
@@ -199,4 +199,5 @@ async function deleteEvent(req, res, next) {
 }
 
 
-export { getEligibleFests, getAllevents, getFest, updateFest, deleteFest, createEvent, getEvent, updateEvent, deleteEvent, createFest, getArchivedFests };
+
+export { getEligibleFests, getAllevents, getFest, updateFest, deleteFest, createEvent, getEvent, updateEvent, deleteEvent, createFest, getArchivedFests, uploadImage };

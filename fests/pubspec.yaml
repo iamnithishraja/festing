@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.18.1
   url_launcher: ^6.2.1
   stream_transform: ^2.0.0
+  font_awesome_flutter: ^10.6.0
+  image_size_getter: ^2.1.2
   
 dev_dependencies:
   flutter_test:

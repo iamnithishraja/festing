@@ -3,38 +3,21 @@ dotenv.config({ path: "/config/config.env" });
 import User from "../models/userModel.js";
 import Order from "../models/orderModel.js";
 import cloudinary from "cloudinary";
+import { uploadImage } from "./festControllers.js";
 import sendTocken from "../utils/sendCookie.js";
 import ApiFeatures from "../utils/apiFeatures.js";
 
 async function register(req, res) {
-    let myCloud;
-    let avatar = null;
     try {
-
-        if (req.body.avatar) {
-            myCloud = await cloudinary.v2.uploader.upload(req.body.avatar,
-                {
-                    folder: "avatars",
-                    width: 150,
-                    crop: "scale"
-                });
-            avatar = {
-                public_id: myCloud.public_id ? myCloud.public_id : undefined,
-                url: myCloud.secure_url ? myCloud.secure_url : undefined
-            }
-        }
-
         const { name, email, password, rollno } = req.body;
         const user = await User.create({
             name: name,
             email: email,
             password: password,
             rollno: rollno,
-            avatar: avatar
         });
         sendTocken(user, res);
     } catch (err) {
-        // await cloudinary.uploader.destroy(myCloud.public_id);
         if (err.code == 11000)
             res.json({ success: false, message: "user alredy exits login" });
         else if (err.message == "User validation failed: email: Please Enter a valid Email") {
@@ -142,6 +125,27 @@ async function updatePassword(req, res, next) {
     sendTocken(user, res);
 }
 
+async function updateProfile(req, res, next) {
+    try {
+        const newUserData = req.body;
+        const user = await User.findById(req.user.id);
+        const temp = JSON.parse(req.body["socialLinks"]);
+        newUserData["socialLinks"] = { ...user.socialLinks, ...temp };
+        if (req.files) {
+            const imageId = user.avatar.public_id;
+            if (imageId) {
+                cloudinary.v2.uploader.destroy(imageId);
+            }
+            newUserData.avatar = await uploadImage(req.files.avatar.data, "avatars");
+        }
+        await User.findByIdAndUpdate(req.user.id, newUserData);
+        res.json({ success: true });
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false });
+    }
+}
+
 async function getAllUsers(req, res, next) {
     try {
         const apiFeatures = new ApiFeatures(User, req.query).search().pagination(100);
@@ -244,4 +248,4 @@ const rejectRequest = async (req, res, next) => {
 };
 
 
-export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout };
+export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout, updateProfile };

@@ -1,22 +1,10 @@
-import 'dart:math';
-
-import 'package:fests/main.dart';
 import 'package:fests/models/order.dart';
-import 'package:fests/providers/eventProvider.dart';
 import 'package:fests/providers/orderProvider.dart';
-import 'package:fests/screens/events/adminScreens/CreateEvent.dart';
-import 'package:fests/screens/events/adminScreens/UpdateEvent.dart';
-import 'package:fests/widgets/listItems/event_item.dart';
 import 'package:fests/widgets/listItems/order_item.dart';
-import 'package:fests/widgets/texts/heading_text.dart';
-import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fests/models/user.dart';
-import 'package:fests/models/fest.dart';
-import 'package:fests/models/event.dart';
 import 'package:fests/providers/userProvider.dart';
-import 'package:fests/widgets/listItems/fest_item.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   OrdersScreen({super.key});

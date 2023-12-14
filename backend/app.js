@@ -6,6 +6,7 @@ import { userRouter } from "./routes/userRoutes.js";
 import { festRouter } from "./routes/festRoutes.js";
 import cors from "cors";
 import orderRouter from "./routes/orderRoutes.js";
+import { postRouter } from "./routes/postRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -19,5 +20,6 @@ app.use(fileUpload());
 
 app.use('/user', userRouter);
 app.use('/fests', festRouter);
-app.use("/orders",orderRouter);
+app.use("/orders", orderRouter);
+app.use("/post", postRouter);
 export default app;

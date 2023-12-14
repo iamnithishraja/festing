@@ -1,12 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fests/globals/constants.dart';
-import 'package:fests/providers/eventProvider.dart';
 import 'package:fests/providers/orderProvider.dart';
-import 'package:fests/utils/customHttpRequest.dart';
 import 'package:flutter/material.dart';
-import 'package:fests/globals/constants.dart';
+import 'dart:io';
 import '../models/user.dart';
-import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,16 +14,31 @@ class userNotifier extends StateNotifier<User?> {
 
   Future<void> tryAutoLogin() async {
     final response = await http.get("$baseUrl/user/me", 'application/json');
+
+    Map<String, String> mp = {
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["github"] != null)
+        "github": response["user"]["socialLinks"]["github"],
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["linkdlin"] != null)
+        "linkdlin": response["user"]["socialLinks"]["linkdlin"],
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["codingPlatform"] != null)
+        "codingPlatform": response["user"]["socialLinks"]["codingPlatform"]
+    };
     if (response["success"]) {
       state = User(
-          id: response["user"]["_id"],
-          name: response["user"]["name"],
-          email: response["user"]["email"],
-          rollno: response["user"]["rollno"],
-          role: response["user"]["role"],
-          avatar: (response["user"]["avatar"] != null)
-              ? response["user"]["avatar"]["url"]
-              : null);
+        id: response["user"]["_id"],
+        name: response["user"]["name"],
+        email: response["user"]["email"],
+        rollno: response["user"]["rollno"],
+        role: response["user"]["role"],
+        avatar: (response["user"]["avatar"] != null)
+            ? response["user"]["avatar"]["url"]
+            : null,
+        bio: response["user"]["bio"],
+        socialLinks: response["user"]["socialLinks"] != null ? mp : {},
+      );
     }
   }
 
@@ -104,6 +118,7 @@ class userNotifier extends StateNotifier<User?> {
           timeInSecForIosWeb: 5,
           textColor: Colors.white,
           fontSize: 16.0);
+      state = null;
     } else {
       Fluttertoast.cancel();
       Fluttertoast.showToast(
@@ -115,7 +130,56 @@ class userNotifier extends StateNotifier<User?> {
           textColor: Colors.white,
           fontSize: 16.0);
     }
-    state = null;
+  }
+
+  Future<void> updateProfile(
+      {String? email,
+      rollno,
+      name,
+      bio,
+      github,
+      linkdlin,
+      cp,
+      File? dp}) async {
+    final mp = jsonEncode({
+      if (github != null) "github": github,
+      if (linkdlin != null) "linkdlin": linkdlin,
+      if (cp != null) "codingPlatform": cp
+    });
+    FormData requestBody = FormData.fromMap({
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (rollno != null) 'rollno': rollno,
+      if (bio != null) 'bio': bio,
+      if (mp != {}) 'socialLinks': mp,
+      if (dp != null)
+        "avatar": await MultipartFile.fromFile(dp!.path,
+            filename: dp.path.split("/").last)
+    });
+    final response = await http.putForm(
+        "$baseUrl/user/me", "multipart/form-data", requestBody);
+    if (response!['success']) {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: "updated user successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          timeInSecForIosWeb: 5,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      tryAutoLogin();
+    } else {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: response['message'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          timeInSecForIosWeb: 5,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }
 

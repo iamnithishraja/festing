@@ -1,4 +1,5 @@
 import 'package:fests/providers/eventProvider.dart';
+import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/screens/events/adminScreens/CreateEvent.dart';
 import 'package:fests/screens/events/adminScreens/UpdateEvent.dart';
 import 'package:fests/widgets/listItems/event_item.dart';
@@ -23,6 +24,7 @@ class _EventsState extends ConsumerState<Events> {
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userProvider) as User;
+    ref.watch(OrdersProvider.notifier).getAllOrders(user.id);
 
     void longPress(Event event) {
       if (user.role != "admin") return;

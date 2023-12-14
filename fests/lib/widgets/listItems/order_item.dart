@@ -1,6 +1,5 @@
 import 'package:fests/models/event.dart';
 import 'package:fests/models/order.dart';
-import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/orders/userScreens/serchTeam.dart';
 import 'package:fests/widgets/listItems/useritems/orderuser_item.dart';
@@ -15,8 +14,8 @@ import 'package:intl/intl.dart';
 
 class OrderItem extends ConsumerStatefulWidget {
   OrderItem(this.order, this.isEqualWaiting, {super.key});
-  Order order;
-  bool isEqualWaiting;
+  final Order order;
+  final bool isEqualWaiting;
   @override
   ConsumerState<OrderItem> createState() => _OrderItemState();
 }

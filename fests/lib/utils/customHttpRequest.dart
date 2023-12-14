@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:fests/utils/debouncer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
