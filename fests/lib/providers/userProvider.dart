@@ -308,9 +308,35 @@ class usersNotifier extends StateNotifier<List<User>> {
     }
   }
 
-  // Future<void> resendRequest() {
-
-  // }
+  Future<User?> getUserDetails(String id) async {
+    final response = await http.get(
+        "$baseUrl/user/getotheruserdetails/$id", "application/json");
+    Map<String, String> mp = {
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["github"] != null)
+        "github": response["user"]["socialLinks"]["github"],
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["linkdlin"] != null)
+        "linkdlin": response["user"]["socialLinks"]["linkdlin"],
+      if (response["user"]["socialLinks"] != null &&
+          response["user"]["socialLinks"]["codingPlatform"] != null)
+        "codingPlatform": response["user"]["socialLinks"]["codingPlatform"]
+    };
+    if (response["success"]) {
+      return User(
+        id: response["user"]["_id"],
+        name: response["user"]["name"],
+        email: response["user"]["email"],
+        rollno: response["user"]["rollno"],
+        role: response["user"]["role"],
+        avatar: (response["user"]["avatar"] != null)
+            ? response["user"]["avatar"]["url"]
+            : null,
+        bio: response["user"]["bio"],
+        socialLinks: response["user"]["socialLinks"] != null ? mp : {},
+      );
+    }
+  }
 }
 
 final allUsersProvider =

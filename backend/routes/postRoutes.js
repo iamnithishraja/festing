@@ -15,7 +15,7 @@ postRouter
 
 postRouter.route("/all").get(isAuthenticatedUser, getPosts);
 
-postRouter.route("/user/posts/:id").get(isAuthenticatedUser, getUserPosts);
+postRouter.route("/user/posts").get(isAuthenticatedUser, getUserPosts);
 
 postRouter
     .route("/post/comment/:id")

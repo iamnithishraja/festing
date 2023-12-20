@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fests/providers/postProvider.dart';
+import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,13 @@ class CreateNewPost extends ConsumerStatefulWidget {
 class _CreateNewPostState extends ConsumerState<CreateNewPost> {
   File? selectedImage = null;
   String _caption = "";
-  String _category = "";
+  String _category = "others";
 
   void takePicture() async {
     final imagePicker = ImagePicker();
     // TODO: add width in cas of heavy file size
     final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+        await imagePicker.pickImage(source: ImageSource.gallery,maxWidth: 1920);
     if (pickedImage == null) {
       return;
     }
@@ -34,15 +35,23 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
     });
   }
 
-  List<String> categories = [];
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    ref
-        .read(postProvider.notifier)
-        .getAllCategories()
-        .then((value) => categories = value);
+  void createPost() {
+    if (selectedImage != null) {
+      ref
+          .read(userpostsProvider.notifier)
+          .createNewPost(selectedImage!, _caption, _category);
+    } else {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: "please select picture",
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.red,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -59,6 +68,7 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
         title: Text("Create New Post"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -126,19 +136,66 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
                 ),
               ),
             ),
-            DropdownButton(
-              items: categories
-                  .map((cat) => DropdownMenuItem(
-                        child: SubHeading(str: cat),
-                        value: UniqueKey(),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                // setState(() {
-                //   _category = value!;
-                // });
+            FutureBuilder(
+              future: ref.read(userpostsProvider.notifier).getAllCategories(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(
+                    color: Colors.white,
+                  );
+                }
+                if (snapshot.data!.length <= 1) {
+                  return Container();
+                }
+                return Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Theme(
+                    data: ThemeData.dark(),
+                    child: DropdownButton(
+                      value: _category,
+                      dropdownColor: Theme.of(context).colorScheme.onBackground,
+                      items: snapshot.data!.map((cat) {
+                        return DropdownMenuItem(
+                          child: SubHeading(str: cat),
+                          value: cat,
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _category = value!;
+                        });
+                      },
+                      underline: Container(),
+                      icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
               },
-            )
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 25),
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton(
+                onPressed: createPost,
+                child: Heading(
+                  str: "CREATE",
+                  fontSize: 28,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(97, 63, 216, 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

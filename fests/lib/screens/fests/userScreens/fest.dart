@@ -71,19 +71,6 @@ class _FestsState extends ConsumerState<Fests> {
       appBar: AppBar(
         title: Heading(str: "Ongoing Fests"),
         backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          IconButton(
-              onPressed: () {
-                ref.read(userProvider.notifier).logout();
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => MyApp(),
-                ));
-              },
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
-              ))
-        ],
       ),
       body: FutureBuilder(
           future: ref.read(festProvider.notifier).getFests(),

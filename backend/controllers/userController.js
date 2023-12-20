@@ -61,7 +61,17 @@ async function getUserDetails(req, res, next) {
         res.json({ success: true, user });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, user: undefined });
+        res.json({ success: false, message: error.message });
+    }
+}
+
+async function getOtherUsersDetails(req, res, next) {
+    try {
+        const user = await User.findById(req.params.id);
+        res.json({ success: true, user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 }
 
@@ -148,9 +158,9 @@ async function updateProfile(req, res, next) {
 
 async function getAllUsers(req, res, next) {
     try {
-        const apiFeatures = new ApiFeatures(User, req.query).search().pagination(100);
+        const apiFeatures = new ApiFeatures(User.find().sort({ name: 1 }), req.query).search().pagination(100);
         const users = await apiFeatures.query;
-        await users.sort((a, b) => a.name.localeCompare(b.name));
+        // await users.sort((a, b) => a.name.localeCompare(b.name));
         res.json({ success: true, users });
     } catch (error) {
         console.log(error.message);
@@ -248,4 +258,4 @@ const rejectRequest = async (req, res, next) => {
 };
 
 
-export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout, updateProfile };
+export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout, updateProfile, getOtherUsersDetails };

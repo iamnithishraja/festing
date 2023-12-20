@@ -1,9 +1,6 @@
-import mongoose from "mongoose";
 import Fest from "../models/festModel.js";
 import Event from "../models/eventModel.js";
-import streamifier from "streamifier";
 import cloudinary from "cloudinary";
-import { query } from "express";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
 

@@ -1,4 +1,5 @@
 import 'package:fests/screens/fests/userScreens/fest.dart';
+import 'package:fests/screens/media/feed.dart';
 import 'package:fests/screens/orders/userScreens/order.dart';
 import 'package:fests/screens/profile/ProfileScreen.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,11 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
         children: [
           Fests(),
           OrdersScreen(),
-          Container(),
+          Feed(),
           ProfileScreen(),
         ],
       ),
