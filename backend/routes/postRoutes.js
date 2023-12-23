@@ -1,6 +1,6 @@
 import express from "express";
 
-import { commentOnPost, createPost, deleteComment, getUserPosts, deletePost, getPosts, likeAndUnlikePost, updatePost, getCategories, removeAllCategories, addCategory } from "../controllers/postControllers.js";
+import { commentOnPost, createPost, getUserPosts, deletePost, getPosts, likeAndUnlikePost, updatePost, getCategories, removeAllCategories, addCategory, getComments } from "../controllers/postControllers.js";
 import { isAuthenticatedUser } from "../middlewares/auth.js";
 
 const postRouter = express.Router();
@@ -20,7 +20,8 @@ postRouter.route("/user/posts").get(isAuthenticatedUser, getUserPosts);
 postRouter
     .route("/post/comment/:id")
     .put(isAuthenticatedUser, commentOnPost)
-    .delete(isAuthenticatedUser, deleteComment);
+
+postRouter.route("/comments/:id").get(isAuthenticatedUser, getComments);
 
 postRouter.route("/category").get(getCategories).delete(removeAllCategories);
 postRouter.post("/category/:id", addCategory);

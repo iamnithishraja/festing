@@ -25,8 +25,8 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
   void takePicture() async {
     final imagePicker = ImagePicker();
     // TODO: add width in cas of heavy file size
-    final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery,maxWidth: 1920);
+    final pickedImage = await imagePicker.pickImage(
+        source: ImageSource.gallery, maxWidth: 1920);
     if (pickedImage == null) {
       return;
     }
@@ -38,7 +38,7 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
   void createPost() {
     if (selectedImage != null) {
       ref
-          .read(userpostsProvider.notifier)
+          .read(postsProvider.notifier)
           .createNewPost(selectedImage!, _caption, _category);
     } else {
       Fluttertoast.cancel();
@@ -60,7 +60,7 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
     if (selectedImage != null) {
       final img = ImageSizeGetter.getSize(FileInput(selectedImage!));
       if (img.height > img.width) {
-        imgHeight = 600;
+        imgHeight = 565;
       }
     }
     return Scaffold(
@@ -137,7 +137,7 @@ class _CreateNewPostState extends ConsumerState<CreateNewPost> {
               ),
             ),
             FutureBuilder(
-              future: ref.read(userpostsProvider.notifier).getAllCategories(),
+              future: ref.read(postsProvider.notifier).getAllCategories(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator(

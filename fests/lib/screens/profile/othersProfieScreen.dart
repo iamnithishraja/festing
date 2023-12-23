@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:fests/globals/constants.dart';
 import 'package:fests/models/post.dart';
 import 'package:fests/providers/userProvider.dart';
-import 'package:fests/widgets/listItems/post_item.dart';
+import 'package:fests/widgets/listItems/postItems/post_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +27,16 @@ class _ProfileScreenState extends ConsumerState<OthersProfileScreen> {
         "$baseUrl/post/user/posts?page=$page&id=$id", "application/json");
     if (response["success"]) {
       List<Post> userPosts = List<Map<String, dynamic>>.from(response["posts"])
-          .map((post) => Post(
-                imageURL: post["image"],
-                capion: post["caption"],
-                id: post["_id"],
-                numLikes: post["numLikes"],
-                numComments: post["numComments"],
-              ))
+          .map(
+            (post) => Post(
+              imageURL: post["image"],
+              capion: post["caption"],
+              id: post["_id"],
+              numLikes: post["numLikes"],
+              numComments: post["numComments"],
+              isLiked: post["isLiked"],
+            ),
+          )
           .toList();
       final isLastPage = userPosts.length < 4;
       if (isLastPage) {

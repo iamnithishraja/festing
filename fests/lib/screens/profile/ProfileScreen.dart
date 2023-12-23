@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:fests/globals/constants.dart';
 import 'package:fests/main.dart';
 import 'package:fests/models/post.dart';
+import 'package:fests/providers/postProvider.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/posts/CreateNewPost.dart';
 import 'package:fests/screens/profile/othersProfieScreen.dart';
 import 'package:fests/screens/profile/updateProfile.dart';
 import 'package:fests/utils/debouncer.dart';
-import 'package:fests/widgets/listItems/post_item.dart';
+import 'package:fests/widgets/listItems/postItems/post_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (response["success"]) {
       List<Post> userPosts = List<Map<String, dynamic>>.from(response["posts"])
           .map((post) => Post(
+                isLiked: post["isLiked"],
                 imageURL: post["image"],
                 capion: post["caption"],
                 id: post["_id"],
@@ -319,21 +321,43 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             onLongPress: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => Dialog(
-                                  insetPadding: EdgeInsets.all(8),
-                                  backgroundColor: Colors.transparent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  ),
-                                  child: PostItem(
-                                      username: user.name,
-                                      rollno: user.rollno,
-                                      postImage: item.imageURL,
-                                      caption: item.capion,
-                                      numLikes: item.numLikes,
-                                      numComments: item.numComments,
-                                      profileImage: user.avatar),
-                                ),
+                                builder: (context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white)),
+                                    title: Heading(
+                                      str: "Delete Post?",
+                                      color: Colors.red,
+                                    ),
+                                    shadowColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    content: SubHeading(
+                                        str:
+                                            "are you sure you want to delete this post."),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: SubHeading(
+                                            str: "Cancel",
+                                            color: Colors.green,
+                                          )),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          ref
+                                              .read(postsProvider.notifier)
+                                              .deletePost(item.id);
+                                        },
+                                        child: SubHeading(
+                                          str: "Delete",
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ]),
                               );
                             },
                             child: Card(

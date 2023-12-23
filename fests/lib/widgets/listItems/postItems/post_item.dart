@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fests/widgets/listItems/useritems/orderuser_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
@@ -24,7 +23,6 @@ class PostItem extends StatefulWidget {
   final int numLikes;
   final String rollno;
   final int numComments;
-
   @override
   _PostItemState createState() => _PostItemState();
 }
