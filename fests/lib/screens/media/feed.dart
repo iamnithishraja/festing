@@ -23,7 +23,6 @@ class _FeedState extends ConsumerState<Feed> {
     final response =
         await http.get("$baseUrl/post/all?page=$page", "application/json");
     if (response["success"]) {
-      print("creator ${response}}");
 
       List<Post> userPosts = List<Map<String, dynamic>>.from(response["posts"])
           .map(
@@ -103,7 +102,6 @@ class _FeedState extends ConsumerState<Feed> {
                       child: Heading(str: "No Posts Found"),
                     ),
                 itemBuilder: (context, item, index) {
-                  print("index $index");
                   return Container(
                     constraints: BoxConstraints(minHeight: 380, maxHeight: 900),
                     child: PostItemFeed(item),

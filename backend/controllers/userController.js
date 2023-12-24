@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "/config/config.env" });
+dotenv.config({ path: "/backend/config/.env" });
+import sendEmail from "../utils/sendEmail.js"
 import User from "../models/userModel.js";
+import crypto from "crypto"
 import Order from "../models/orderModel.js";
 import cloudinary from "cloudinary";
 import { uploadImage } from "./festControllers.js";
@@ -82,13 +84,13 @@ async function fergotPassword(req, res, next) {
     } else {
         const resetToken = await user.getResetPasswordToken();
         await user.save({ validateBeforeSave: false });
-        const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;
-        // const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`
+        // const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;
+        const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`
         const message = `your password reset token is \n\n${resetPasswordUrl} \n\nif you have not requsted this email then, please ignore it`;
         try {
             await sendEmail({
                 email: user.email,
-                subject: "Ecommerse Password Recovery",
+                subject: "Festing App Password Recovery",
                 message: message
             });
             res.json({ success: true, message: `email sent to ${user.email} successfully` });

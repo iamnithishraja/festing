@@ -1,11 +1,11 @@
+import 'package:fests/screens/auth/changePassword.dart';
 import 'package:fests/screens/auth/login.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/auth/signup.dart';
-import 'package:fests/screens/fests/adminScreens/createFest.dart';
-import 'package:fests/screens/fests/userScreens/fest.dart';
 import 'package:fests/widgets/tabs/tabs_conroller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './globals/theme.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +18,10 @@ class MyApp extends ConsumerStatefulWidget {
   ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _MyAppState extends ConsumerState<MyApp>
+    with SingleTickerProviderStateMixin {
+  final _cmdStyle = const TextStyle(
+      fontFamily: 'Courier', fontSize: 12.0, fontWeight: FontWeight.w700);
   void _switchLoginSignUp() {
     setState(() {
       if (currScreen == "login") {
@@ -32,39 +35,50 @@ class _MyAppState extends ConsumerState<MyApp> {
   String currScreen = "login";
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (_, __) => FutureBuilder(
+            future: ref.watch(userProvider.notifier).tryAutoLogin(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                );
+              }
+              if (ref.watch(userProvider) == null) {
+                return currScreen == "login"
+                    ? Login(
+                        callBack: _switchLoginSignUp,
+                      )
+                    : SignUp(
+                        callBack: _switchLoginSignUp,
+                      );
+              }
+              return DefaultTabController(
+                length: 4,
+                child: Menu(),
+                initialIndex: 0,
+              );
+            },
+          ),
+          routes: [
+            GoRoute(
+              path: "password/reset/:id",
+              builder: (context, state) =>
+                  ChangePassword(state.pathParameters["id"]),
+            )
+          ],
+        ),
+      ],
+    );
+    return MaterialApp.router(
       themeMode: ThemeMode.dark,
       theme: AppTheme.darkTheme(),
-      home: FutureBuilder(
-        future: ref.watch(userProvider.notifier).tryAutoLogin(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            );
-          }
-          if (ref.watch(userProvider) == null) {
-            return currScreen == "login"
-                ? Login(
-                    callBack: _switchLoginSignUp,
-                  )
-                : SignUp(
-                    callBack: _switchLoginSignUp,
-                  );
-          }
-          return DefaultTabController(
-            length: 4,
-            child: Menu(),
-            initialIndex: 0,
-          );
-        },
-      ),
-      routes: {
-        Fests().route: (context) => Fests(),
-        CreateFest().route: (context) => CreateFest(),
-      },
+      routerConfig: router,
     );
   }
 }

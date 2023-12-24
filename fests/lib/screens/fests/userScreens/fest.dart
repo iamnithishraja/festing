@@ -1,4 +1,5 @@
 import 'package:fests/providers/festProvider.dart';
+import 'package:fests/screens/fests/adminScreens/createFest.dart';
 import 'package:fests/screens/fests/adminScreens/updateFest.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
@@ -104,7 +105,9 @@ class _FestsState extends ConsumerState<Fests> {
       floatingActionButton: (user.role == "admin")
           ? FloatingActionButton(
               child: Icon(Icons.add),
-              onPressed: () => Navigator.of(context).pushNamed("/fests/create"),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateFest(),
+              )),
               backgroundColor: Theme.of(context).colorScheme.secondary,
             )
           : Container(),

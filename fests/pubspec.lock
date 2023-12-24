@@ -137,14 +137,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
-  flare_flutter:
-    dependency: "direct main"
-    description:
-      name: flare_flutter
-      sha256: "99d63c60f00fac81249ce6410ee015d7b125c63d8278a30da81edf3317a1f6a0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -175,7 +167,7 @@ packages:
     source: hosted
     version: "2.4.6"
   flutter_staggered_grid_view:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
@@ -208,6 +200,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.6.0"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: ca7e4a2249f96773152f1853fa25933ac752495cdd7fdf5dafb9691bd05830fd
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -344,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
@@ -432,22 +440,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
-  pinch_zoom:
-    dependency: "direct main"
-    description:
-      name: pinch_zoom
-      sha256: "8e430a215db198099a708f334620e223cbea3fdc477b717d6535ab852994985e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  pinch_zoom_release_unzoom:
-    dependency: "direct main"
-    description:
-      name: pinch_zoom_release_unzoom
-      sha256: "504e3ee51a1c5f30c298ef20957dd10cb894b32444f215cc228f3f2c1ef70513"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   platform:
     dependency: transitive
     description:
@@ -661,14 +653,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
-  zoom_widget:
-    dependency: "direct main"
-    description:
-      name: zoom_widget
-      sha256: "50fbaa460ffc938ca14c0077f8c9e5968c437897242d7f552dacff1bf3270225"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
 sdks:
   dart: ">=3.1.5 <4.0.0"
   flutter: ">=3.13.0"

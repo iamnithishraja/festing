@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:fests/providers/postProvider.dart';
+import 'package:fests/widgets/listItems/comments.dart';
 import 'package:fests/widgets/listItems/useritems/orderuser_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/material.dart';
-import 'package:image_size_getter/file_input.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 
-class PostItem extends StatefulWidget {
+class PostItem extends ConsumerStatefulWidget {
   PostItem({
     this.profileImage,
     required this.username,
@@ -15,20 +17,37 @@ class PostItem extends StatefulWidget {
     required this.numLikes,
     required this.numComments,
     required this.rollno,
+    required this.isLiked,
+    required this.id,
   });
   final String? profileImage;
   final String username;
   final String postImage;
   final String caption;
-  final int numLikes;
+  int numLikes;
+  final String id;
   final String rollno;
   final int numComments;
+  final bool isLiked;
   @override
   _PostItemState createState() => _PostItemState();
 }
 
-class _PostItemState extends State<PostItem> {
+class _PostItemState extends ConsumerState<PostItem>
+    with SingleTickerProviderStateMixin {
   bool showFullCaption = false;
+  late bool isLiked;
+  bool isHeartAnimating = false;
+  late final AnimationController _controller = AnimationController(
+      duration: const Duration(milliseconds: 500), vsync: this, value: 1.0);
+  late Animation<double> scale;
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.isLiked;
+    scale = Tween<double>(begin: 0, end: 2).animate(_controller);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dp = widget.profileImage == null
@@ -52,6 +71,22 @@ class _PostItemState extends State<PostItem> {
         ),
       );
       return completer.future;
+    }
+
+    void likeHandler() {
+      setState(() {
+        isLiked = !isLiked;
+        if (isLiked) {
+          isHeartAnimating = true;
+          widget.numLikes++;
+          _controller.forward().then((value) {
+            _controller.reverse().then((value) {});
+          });
+        } else {
+          widget.numLikes--;
+        }
+      });
+      ref.read(postsProvider.notifier).likeunlikePost(widget.id);
     }
 
     return Container(
@@ -98,22 +133,99 @@ class _PostItemState extends State<PostItem> {
                 future: _calculateImageDimension(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    return Container(
-                      height: snapshot.data.height > snapshot.data.width
-                          ? 600
-                          : 230,
-                      width: double.infinity,
-                      child: image,
+                    return GestureDetector(
+                      onDoubleTap: likeHandler,
+                      child: ClipRect(
+                        clipBehavior: Clip.none,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              height: snapshot.data.height > snapshot.data.width
+                                  ? 565
+                                  : 230,
+                              width: double.infinity,
+                              child: image,
+                            ),
+                            Opacity(
+                              opacity: isHeartAnimating ? 1 : 0,
+                              child: ScaleTransition(
+                                scale: scale,
+                                child: Icon(
+                                  Icons.favorite,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  size: 200,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   } else {
-                    return CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.secondary,
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     );
                   }
                 },
               ),
 
-              // Caption
+              // Like and Comment Section
+              Padding(
+                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          TextButton.icon(
+                            label: SubHeading(str: '${widget.numLikes} Likes'),
+                            onPressed: likeHandler,
+                            icon: isLiked
+                                ? Icon(
+                                    Icons.favorite,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    size: 32,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border,
+                                    size: 32,
+                                    color: Colors.white,
+                                  ),
+                          ),
+                          Spacer(),
+                          TextButton.icon(
+                            label: SubHeading(
+                              str: '${widget.numComments} Comments',
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: ((context) =>
+                                      CommentsSheet(widget.id)),
+                                  showDragHandle: true,
+                                  enableDrag: true,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary);
+                            },
+                            icon: Icon(
+                              Icons.comment_outlined,
+                              size: 32,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               GestureDetector(
                   onTap: () {
                     setState(() {
@@ -121,7 +233,8 @@ class _PostItemState extends State<PostItem> {
                     });
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8, left: 8),
+                    padding:
+                        EdgeInsets.only(top: 8.0, left: 5, right: 5, bottom: 8),
                     child: SubHeading(
                       str: showFullCaption
                           ? widget.caption
@@ -131,29 +244,6 @@ class _PostItemState extends State<PostItem> {
                       align: TextAlign.center,
                     ),
                   )),
-
-              // Like and Comment Section
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Icon(Icons.favorite),
-                          SizedBox(width: 4.0),
-                          SubHeading(str: '${widget.numLikes} Likes'),
-                          Spacer(),
-                          SubHeading(str: '${widget.numComments} Comments'),
-                          SizedBox(width: 4.0),
-                          Icon(Icons.comment),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:fests/screens/auth/fergotpasswordPage.dart';
 import 'package:fests/screens/auth/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
@@ -141,8 +142,20 @@ class _LoginState extends ConsumerState<Login> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
+                      Row(
+                        children: [
+                          Spacer(),
+                          TextButton(
+                              onPressed: () =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        FergotPasswordScreen(),
+                                  )),
+                              child: SubHeading(
+                                str: "fergot password?",
+                                color: Colors.blueAccent,
+                              )),
+                        ],
                       ),
                       SizedBox(
                         width: double.infinity,

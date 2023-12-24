@@ -206,6 +206,8 @@ class _ProfileScreenState extends ConsumerState<OthersProfileScreen> {
                                             rollno: snapshot.data!.rollno,
                                             postImage: item.imageURL,
                                             caption: item.capion,
+                                            id: item.id,
+                                            isLiked: item.isLiked,
                                             numLikes: item.numLikes,
                                             numComments: item.numComments,
                                             profileImage:
@@ -228,6 +230,8 @@ class _ProfileScreenState extends ConsumerState<OthersProfileScreen> {
                                             rollno: snapshot.data!.rollno,
                                             postImage: item.imageURL,
                                             caption: item.capion,
+                                            id: item.id,
+                                            isLiked: item.isLiked,
                                             numLikes: item.numLikes,
                                             numComments: item.numComments,
                                             profileImage:

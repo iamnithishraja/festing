@@ -15,6 +15,13 @@ class CommentsSheet extends ConsumerStatefulWidget {
 class _CommentsSheetState extends ConsumerState<CommentsSheet> {
   final _commentController = TextEditingController();
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _commentController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.65,

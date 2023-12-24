@@ -310,6 +310,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   child: PostItem(
                                       username: user.name,
                                       rollno: user.rollno,
+                                      id: item.id,
+                                      isLiked: item.isLiked,
                                       postImage: item.imageURL,
                                       caption: item.capion,
                                       numLikes: item.numLikes,
