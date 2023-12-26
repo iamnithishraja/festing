@@ -78,40 +78,41 @@ class _EventsState extends ConsumerState<OrdersScreen>
                 myevents.add(order);
               }
             }
-            return RefreshIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-                onRefresh: () =>
-                    ref.read(OrdersProvider.notifier).getAllOrders(user.id),
-                child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: _tabController1,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return OrderItem(orders[index], false);
-                          },
-                          itemCount: myevents.length,
-                        )),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return OrderItem(orders[index], true);
-                          },
-                          itemCount: requests.length,
-                        )),
-                  ],
-                ));
+            return TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: _tabController1,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return OrderItem(orders[index], false);
+                      },
+                      itemCount: myevents.length,
+                    )),
+                RefreshIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  onRefresh: () =>
+                      ref.read(OrdersProvider.notifier).getAllOrders(user.id),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return OrderItem(orders[index], true);
+                        },
+                        itemCount: requests.length,
+                      )),
+                ),
+              ],
+            );
           }),
     );
   }

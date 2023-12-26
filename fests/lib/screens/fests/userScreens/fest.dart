@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fests/models/user.dart';
 import 'package:fests/models/fest.dart';
 import 'package:fests/providers/userProvider.dart';
-import 'package:fests/main.dart';
 import 'package:fests/widgets/listItems/fest_item.dart';
 
 class Fests extends ConsumerStatefulWidget {
@@ -22,7 +21,7 @@ class _FestsState extends ConsumerState<Fests> {
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userProvider) as User;
-    void longPress(Fest fest) {
+    void longPress(Fest fest) async {
       if (user.role != "admin") return;
       showDialog(
         context: context,

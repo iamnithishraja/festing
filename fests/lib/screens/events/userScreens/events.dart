@@ -2,6 +2,7 @@ import 'package:fests/providers/eventProvider.dart';
 import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/screens/events/adminScreens/CreateEvent.dart';
 import 'package:fests/screens/events/adminScreens/UpdateEvent.dart';
+import 'package:fests/screens/orders/adminScreens/dismissTeam.dart';
 import 'package:fests/widgets/listItems/event_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
@@ -65,6 +66,22 @@ class _EventsState extends ConsumerState<Events> {
                 str: "Edit",
                 fontSize: 16,
                 color: Colors.green,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => EventTeamsScreen(event)));
+              },
+              icon: Icon(
+                Icons.people,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              label: SubHeading(
+                str: "Teams",
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],

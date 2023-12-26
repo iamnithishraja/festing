@@ -39,25 +39,32 @@ async function getAllOrders(req, res, next) {
     }
 }
 
-async function resendRequest(req, res, next) {
+async function getAllOrdersByEvent(req, res, next) {
     try {
-        const order = await Order.findById(req.body.orderId);
-        for (var i = 0; i < order.team.length; i++) {
-            if (order.team[i].user == req.body.userId) {
-                order.team[i].status = "waiting";
-            }
-        }
-        const user = await User.findById(req.body.userId);
-        user.myEvents.push(order._id);
-
-        await Order.findByIdAndUpdate(req.body.OrderId, order);
-        await User.findByIdAndUpdate(req.body.userId, user);
-        res.json({ success: true });
+        const orders = await Order.find({ event: req.params.id }).populate("team.user").populate("event");
+        res.json({ success: true, orders });
     } catch (error) {
         console.log(err);
         res.json({ success: false });
     }
 }
 
+async function deleteOrder(req, res, next) {
+    try {
+        const order = await Order.findById(req.params.id);
+        for (let j = 0; j < order.team.length; j++) {
+            const userId = order.team[j].user;
+            const user = await User.findById(userId);
+            user.myEvents = user.myEvents.filter((userorder) => userorder.toString() != order._id.toString());
+            await User.findByIdAndUpdate(userId, user);
+        }
+        await Order.deleteOne({ _id: req.params.id });
+        res.json({ success: true, message: "deleted this team" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+}
 
-export { createOrder, getAllOrders };
+
+export { createOrder, getAllOrders, getAllOrdersByEvent, deleteOrder };

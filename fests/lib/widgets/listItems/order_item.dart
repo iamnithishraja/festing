@@ -13,9 +13,10 @@ import 'package:intl/intl.dart';
 //TODO: addd approve reject from admin side
 
 class OrderItem extends ConsumerStatefulWidget {
-  OrderItem(this.order, this.isEqualWaiting, {super.key});
+  OrderItem(this.order, this.isEqualWaiting, {this.isViewedAsList, super.key});
   final Order order;
   final bool isEqualWaiting;
+  bool? isViewedAsList = true;
   @override
   ConsumerState<OrderItem> createState() => _OrderItemState();
 }
@@ -26,7 +27,6 @@ class _OrderItemState extends ConsumerState<OrderItem>
   late Order order = widget.order;
 
   late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
@@ -50,6 +50,8 @@ class _OrderItemState extends ConsumerState<OrderItem>
       _tabController.dispose();
       super.dispose();
     }
+
+    void _deleteOrder() {}
 
     List<Widget> accepted = [];
     List<Widget> rejected = [];
@@ -398,71 +400,73 @@ class _OrderItemState extends ConsumerState<OrderItem>
                   ],
                 ),
                 SizedBox(height: 5),
-                isEqualWaiting
-                    ? Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 60,
-                              child: ElevatedButton(
-                                onPressed: _acceptRequest,
-                                child: Heading(
-                                  str: "Accept",
-                                  fontSize: 28,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                widget.isViewedAsList != null
+                    ? Container()
+                    : isEqualWaiting
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    onPressed: _acceptRequest,
+                                    child: Heading(
+                                      str: "Accept",
+                                      fontSize: 28,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 60,
-                              child: ElevatedButton(
-                                onPressed: _rejectRequest,
-                                child: Heading(
-                                  str: "Reject",
-                                  fontSize: 28,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                              Expanded(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    onPressed: _rejectRequest,
+                                    child: Heading(
+                                      str: "Reject",
+                                      fontSize: 28,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
                                   ),
+                                ),
+                              )
+                            ],
+                          )
+                        : SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => serchTeamMates(order),
+                                ),
+                              ),
+                              child: Heading(
+                                str: "Invite More People",
+                                fontSize: 28,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
                             ),
                           )
-                        ],
-                      )
-                    : SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => serchTeamMates(order),
-                            ),
-                          ),
-                          child: Heading(
-                            str: "Invite More People",
-                            fontSize: 28,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                      )
               ],
             ),
           )

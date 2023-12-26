@@ -46,7 +46,7 @@ class _MyAppState extends ConsumerState<MyApp>
                 return Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,
-                  ),
+                  ), 
                 );
               }
               if (ref.watch(userProvider) == null) {

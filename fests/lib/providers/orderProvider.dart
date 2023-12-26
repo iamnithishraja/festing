@@ -122,3 +122,80 @@ class orderNotifier extends StateNotifier<List<Order>> {
 final OrdersProvider = StateNotifierProvider<orderNotifier, List<Order>>((ref) {
   return orderNotifier();
 });
+
+class eventOrderNotifier extends StateNotifier<List<Order>> {
+  eventOrderNotifier() : super([]);
+
+  Future<void> getAllOrdersByEvent(String eventId) async {
+    final response = await http.get(
+      "$baseUrl/orders/event/$eventId",
+      "application/json",
+    );
+    if (response["success"]) {
+      List<Order> orders = [];
+      for (var order in response["orders"]) {
+        List<List<DateTime>> schedule = [];
+        for (List pair in order["event"]["schedule"]) {
+          schedule.add([
+            DateTime.parse(pair[0]).toLocal(),
+            DateTime.parse(pair[1]).toLocal()
+          ]);
+        }
+        final event = Event(
+            id: order["event"]["_id"],
+            name: order["event"]["name"],
+            description: order["event"]["description"],
+            image: order["event"]["poster"]["url"],
+            category: order["event"]["category"],
+            details: [...order["event"]["details"]],
+            price: order["event"]["price"],
+            teamSize: order["event"]["teamSize"],
+            venue: order["event"]["venue"],
+            scedule: schedule,
+            mapsLink: order["event"]["location"]);
+        List<Map<User, String>> team = [];
+        for (final member in order["team"]) {
+          final user = User(
+              id: member["user"]["_id"],
+              name: member["user"]["name"],
+              email: member["user"]["email"],
+              rollno: member["user"]["rollno"],
+              avatar: (member["user"]["avatar"] != null)
+                  ? member["user"]["avatar"]["url"]
+                  : null,
+              role: member["user"]["role"]);
+          final status = member["status"];
+          team.add({user: status});
+        }
+        orders.add(Order(id: order["_id"], event: event, team: team));
+      }
+      state = orders;
+    }
+  }
+
+  Future<void> deleteOrder(String orderId) async {
+    final response = await http
+        .delete("$baseUrl/orders/event/$orderId", "application/json", {});
+    if (response!["success"]) {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: "this team removed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          timeInSecForIosWeb: 2,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      if (state.length == 1) {
+        state = [];
+      } else {
+        getAllOrdersByEvent(state[0].id);
+      }
+    }
+  }
+}
+
+final eventOrdersProvider =
+    StateNotifierProvider<eventOrderNotifier, List<Order>>((ref) {
+  return eventOrderNotifier();
+});
