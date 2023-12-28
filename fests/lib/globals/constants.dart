@@ -1,4 +1,4 @@
 import 'package:fests/utils/customHttpRequest.dart';
 
-const baseUrl = "https://festing-3al1ojuq5-iamnithishrajas-projects.vercel.app";  
+const baseUrl = "https://salmon-ostrich-kit.cyclic.app/";  
 final http = customHttp();
