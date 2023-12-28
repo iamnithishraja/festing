@@ -22,4 +22,8 @@ app.use('/user', userRouter);
 app.use('/fests', festRouter);
 app.use("/orders", orderRouter);
 app.use("/post", postRouter);
+
+app.get("/", (req, res, next) => {
+    res.json({ success: true, message: "working" });
+});
 export default app;
