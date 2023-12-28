@@ -2,16 +2,17 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env" })
 import mongoose from "mongoose";
 
-function connectDatabse(cb) {
+function connectDatabse() {
     return new Promise((resolve) => {
-        return mongoose.connect(process.env.DB_URI).then(
+        mongoose.connect(process.env.DB_URI).then(
             () => {
                 console.log("connected to db");
-                cb();
                 resolve();
             }
         ).catch(err => {
+            console.log("error connecting to db");
             console.log(err);
+            resolve();
         });
     });
 }

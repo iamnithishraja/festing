@@ -10,7 +10,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-connectDatabse((result) => {
+connectDatabse().then((result) => {
     app.listen(process.env.PORT, () => {
         console.log("listning on port " + process.env.PORT);
     });
