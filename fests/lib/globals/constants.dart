@@ -1,4 +1,4 @@
 import 'package:fests/utils/customHttpRequest.dart';
 
-const baseUrl = "http://192.168.1.5:3000";
+const baseUrl = "https://festing-3al1ojuq5-iamnithishrajas-projects.vercel.app";  
 final http = customHttp();
