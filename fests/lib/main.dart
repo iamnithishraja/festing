@@ -20,8 +20,6 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp>
     with SingleTickerProviderStateMixin {
-  final _cmdStyle = const TextStyle(
-      fontFamily: 'Courier', fontSize: 12.0, fontWeight: FontWeight.w700);
   void _switchLoginSignUp() {
     setState(() {
       if (currScreen == "login") {
@@ -46,7 +44,7 @@ class _MyAppState extends ConsumerState<MyApp>
                 return Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,
-                  ), 
+                  ),
                 );
               }
               if (ref.watch(userProvider) == null) {

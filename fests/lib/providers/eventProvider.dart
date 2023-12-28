@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class eventNotifier extends StateNotifier {
+class eventNotifier extends StateNotifier<List<Event>> {
   eventNotifier() : super([]);
 
   Future<void> createEvent({
@@ -151,7 +151,7 @@ class eventNotifier extends StateNotifier {
   Future<void> getEvents(String festId) async {
     final response =
         await http.get("$baseUrl/fests/events/$festId", "application/json");
-    final events = [];
+    List<Event> events = [];
     if (response["success"]) {
       for (final event in response["events"]) {
         List<List<DateTime>> schedule = [];
@@ -180,4 +180,5 @@ class eventNotifier extends StateNotifier {
   }
 }
 
-final eventProvider = StateNotifierProvider((ref) => eventNotifier());
+final eventProvider =
+    StateNotifierProvider<eventNotifier, List<Event>>((ref) => eventNotifier());

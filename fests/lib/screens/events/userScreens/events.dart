@@ -3,6 +3,7 @@ import 'package:fests/providers/orderProvider.dart';
 import 'package:fests/screens/events/adminScreens/CreateEvent.dart';
 import 'package:fests/screens/events/adminScreens/UpdateEvent.dart';
 import 'package:fests/screens/orders/adminScreens/dismissTeam.dart';
+import 'package:fests/screens/orders/userScreens/festTimeline.dart';
 import 'package:fests/widgets/listItems/event_item.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
@@ -92,6 +93,15 @@ class _EventsState extends ConsumerState<Events> {
     return Scaffold(
       appBar: AppBar(
         title: Heading(str: "${widget.fest.festName} Events"),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => FestTimelineScreen(),
+            )),
+            icon: Icon(Icons.timeline,size: 32),
+            color: Colors.white,
+          )
+        ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: FutureBuilder(
