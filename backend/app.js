@@ -24,6 +24,7 @@ app.use("/orders", orderRouter);
 app.use("/post", postRouter);
 
 app.get("/", (req, res, next) => {
-    res.json({ success: true, message: "working" });
+    res.json({ success: true, message: "working", pid: process.pid });
 });
+
 export default app;

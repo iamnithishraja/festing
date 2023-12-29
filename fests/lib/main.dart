@@ -2,7 +2,7 @@ import 'package:fests/screens/auth/changePassword.dart';
 import 'package:fests/screens/auth/login.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/auth/signup.dart';
-import 'package:fests/screens/starting/splashScreen.dart';
+import 'package:fests/screens/others/splashScreen.dart';
 import 'package:fests/widgets/tabs/tabs_conroller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './globals/theme.dart';
