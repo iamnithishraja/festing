@@ -5,8 +5,8 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
-class customHttp {
-  final dio = Dio(
+class CustomHttp {
+  final Dio dio = Dio(
     BaseOptions(
       connectTimeout: Duration(days: 1),
       receiveTimeout: Duration(days: 1),
@@ -29,8 +29,16 @@ class customHttp {
     dio.interceptors.add(CookieManager(jar));
   }
 
-  Future<Map> get(String url, String contentType) async {
+  Future<Map> autoLoginRequest(String url, String contentType) async {
     await prepareJar();
+    final response = await dio.get(
+      url,
+      options: Options(contentType: contentType),
+    );
+    return json.decode(response.data) as Map;
+  }
+
+  Future<Map> get(String url, String contentType) async {
     final response = await dio.get(
       url,
       options: Options(contentType: contentType),

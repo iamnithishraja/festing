@@ -83,6 +83,9 @@ class postNotifier extends StateNotifier<List<Map>> {
   Future<void> commentOnPost(String postID, String comment) async {
     final response = await http.putForm("$baseUrl/post/post/comment/$postID",
         "application/json", FormData.fromMap({"comment": comment}));
+    if (response!["success"]) {
+      getPostComments(postID);
+    }
   }
 
   Future<Map> getPostComments(String postId) async {

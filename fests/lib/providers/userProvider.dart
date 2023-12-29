@@ -13,7 +13,8 @@ class userNotifier extends StateNotifier<User?> {
   userNotifier() : super(null);
 
   Future<void> tryAutoLogin() async {
-    final response = await http.get("$baseUrl/user/me", 'application/json');
+    final response =
+        await http.autoLoginRequest("$baseUrl/user/me", 'application/json');
 
     Map<String, String> mp = {
       if (response["user"]["socialLinks"] != null &&

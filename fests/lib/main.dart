@@ -2,6 +2,7 @@ import 'package:fests/screens/auth/changePassword.dart';
 import 'package:fests/screens/auth/login.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/auth/signup.dart';
+import 'package:fests/screens/starting/splashScreen.dart';
 import 'package:fests/widgets/tabs/tabs_conroller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './globals/theme.dart';
@@ -41,11 +42,7 @@ class _MyAppState extends ConsumerState<MyApp>
             future: ref.watch(userProvider.notifier).tryAutoLogin(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                );
+                return SplashScreen();
               }
               if (ref.watch(userProvider) == null) {
                 return currScreen == "login"
