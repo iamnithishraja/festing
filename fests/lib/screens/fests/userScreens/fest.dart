@@ -1,6 +1,7 @@
 import 'package:fests/providers/festProvider.dart';
 import 'package:fests/screens/fests/adminScreens/createFest.dart';
 import 'package:fests/screens/fests/adminScreens/updateFest.dart';
+import 'package:fests/screens/others/qrScreen.dart.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,19 @@ class _FestsState extends ConsumerState<Fests> {
       appBar: AppBar(
         title: Heading(str: "Ongoing Fests"),
         backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          IconButton(
+              iconSize: 38,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => QRScannerScreen(),
+                ));
+              },
+              icon: Icon(
+                Icons.qr_code_scanner_rounded,
+                color: Colors.white,
+              ))
+        ],
       ),
       body: FutureBuilder(
           future: ref.read(festProvider.notifier).getFests(),
