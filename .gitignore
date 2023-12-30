@@ -155,6 +155,7 @@ dist
 
 # Serverless directories
 .serverless/
+firebase.config.json
 
 # FuseBox cache
 .fusebox/

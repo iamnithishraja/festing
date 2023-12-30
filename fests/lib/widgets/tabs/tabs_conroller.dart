@@ -40,7 +40,7 @@ class Menu extends StatelessWidget {
               icon: Icon(Icons.directions_run),
             ),
             Tab(
-              text: "Media",
+              text: "Feed",
               icon: Icon(Icons.play_circle_filled),
             ),
             Tab(

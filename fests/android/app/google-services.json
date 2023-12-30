@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "95107159948",
+    "project_id": "fests-3bc00",
+    "storage_bucket": "fests-3bc00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95107159948:android:091dc81da6510c972e28a9",
+        "android_client_info": {
+          "package_name": "com.example.fests"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk_hpH9b5m7m5bIvTJIl6EHGfxXakgf5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
