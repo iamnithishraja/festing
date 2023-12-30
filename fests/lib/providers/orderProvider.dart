@@ -29,8 +29,8 @@ class orderNotifier extends StateNotifier<List<Order>> {
     List<List<DateTime>> schedule = [];
     for (List pair in order["event"]["schedule"]) {
       schedule.add([
-        DateTime.parse(pair[0]).toLocal(),
-        DateTime.parse(pair[1]).toLocal()
+        DateTime.parse(pair[0]),
+        DateTime.parse(pair[1])
       ]);
     }
     final event = Event(
@@ -71,8 +71,8 @@ class orderNotifier extends StateNotifier<List<Order>> {
         List<List<DateTime>> schedule = [];
         for (List pair in order["event"]["schedule"]) {
           schedule.add([
-            DateTime.parse(pair[0]).toLocal(),
-            DateTime.parse(pair[1]).toLocal()
+            DateTime.parse(pair[0]),
+            DateTime.parse(pair[1])
           ]);
         }
         final event = Event(
@@ -137,8 +137,8 @@ class eventOrderNotifier extends StateNotifier<List<Order>> {
         List<List<DateTime>> schedule = [];
         for (List pair in order["event"]["schedule"]) {
           schedule.add([
-            DateTime.parse(pair[0]).toLocal(),
-            DateTime.parse(pair[1]).toLocal()
+            DateTime.parse(pair[0]),
+            DateTime.parse(pair[1])
           ]);
         }
         final event = Event(

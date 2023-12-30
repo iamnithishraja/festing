@@ -157,8 +157,8 @@ class eventNotifier extends StateNotifier<List<Event>> {
         List<List<DateTime>> schedule = [];
         for (List pair in event["schedule"]) {
           schedule.add([
-            DateTime.parse(pair[0]).toLocal(),
-            DateTime.parse(pair[1]).toLocal()
+            DateTime.parse(pair[0]),
+            DateTime.parse(pair[1])
           ]);
         }
         events.add(Event(
