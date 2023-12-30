@@ -49,17 +49,18 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         title: Heading(str: "Scan QR"),
         actions: [
           IconButton(
-              iconSize: 38,
-              onPressed: () {
-                setState(() {
-                  controller?.toggleFlash();
-                  isFlashlightOn = !isFlashlightOn;
-                });
-              },
-              icon: Icon(
-                isFlashlightOn ? Icons.flashlight_off : Icons.flashlight_on,
-                color: Colors.white,
-              ))
+            iconSize: 38,
+            onPressed: () {
+              setState(() {
+                controller?.toggleFlash();
+                isFlashlightOn = !isFlashlightOn;
+              });
+            },
+            icon: Icon(
+              isFlashlightOn ? Icons.flashlight_off : Icons.flashlight_on,
+              color: Colors.white,
+            ),
+          )
         ],
       ),
       body: Column(

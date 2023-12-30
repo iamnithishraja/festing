@@ -6,6 +6,8 @@ class AppTheme {
     return ThemeData.dark().copyWith(
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: Colors.white,
+        selectionColor: Color.fromRGBO(97, 63, 216, 1),
+        selectionHandleColor: Color.fromRGBO(97, 63, 216, 1),
       ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color.fromRGBO(15, 15, 15, 0.6),
