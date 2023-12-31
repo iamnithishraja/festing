@@ -49,7 +49,7 @@ class _FestTimelineScreenState extends ConsumerState<FestTimelineScreen> {
         if (endTime.isAtSameMomentAs(startTime)) {
           timelines[i].add({
             "startTime": startTime,
-            "endTime": endTime,
+            "endTime": event.scedule[day - 1].last,
             "name": event.name,
             "category": event.category
           });
@@ -124,7 +124,7 @@ class _FestTimelineScreenState extends ConsumerState<FestTimelineScreen> {
           IconButton(
             onPressed: () {
               setState(() {
-                if (day!=dayslength) {
+                if (day != dayslength) {
                   day++;
                 }
               });
