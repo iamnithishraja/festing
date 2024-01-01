@@ -21,9 +21,9 @@ async function register(req, res) {
         sendTocken(user, res);
     } catch (err) {
         if (err.code == 11000)
-            res.json({ success: false, message: "user alredy exits login" });
+            res.json({ success: false, message: "User alredy exits, login" });
         else if (err.message == "User validation failed: email: Please Enter a valid Email") {
-            res.json({ success: false, message: "please enter valid e mail" });
+            res.json({ success: false, message: "please enter valid Email" });
         } else {
             res.json({ success: false, message: err.message });
         }
@@ -38,14 +38,14 @@ async function login(req, res) {
         if (!user) {
             res.json({
                 success: false,
-                message: "email dosent exist please register"
+                message: "Email doesn't exist please register"
             });
         } else {
             const isPasswordMatched = await user.comparePassword(password);
             if (!isPasswordMatched) {
                 res.json({
                     success: false,
-                    message: "incorrect password"
+                    message: "Incorrect password"
                 });
             } else {
                 sendTocken(user, res);
@@ -77,10 +77,10 @@ async function getOtherUsersDetails(req, res, next) {
     }
 }
 
-async function fergotPassword(req, res, next) {
+async function forgotPassword(req, res, next) {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-        return next(res.json({ success: false, message: "the user dosent exist please create account" }));
+        return next(res.json({ success: false, message: "The user doesn't exist please create account" }));
     } else {
         const resetToken = await user.getResetPasswordToken();
         await user.save({ validateBeforeSave: false });
@@ -93,7 +93,7 @@ async function fergotPassword(req, res, next) {
                 subject: "Festing App Password Recovery",
                 message: message
             });
-            res.json({ success: true, message: `email sent to ${user.email} successfully` });
+            res.json({ success: true, message: `Email sent to ${user.email} successfully` });
         } catch (error) {
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
@@ -107,10 +107,10 @@ async function resetPassword(req, res, next) {
     const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
     const user = await User.findOne({ resetPasswordToken: resetPasswordToken });
     if (!user) {
-        return next(res.json({ success: false, message: "the time has been expired or token is invalid" }));
+        return next(res.json({ success: false, message: "The time has been expired or token is invalid" }));
     } else {
         if (req.body.password !== req.body.confirmPassword) {
-            return next(res.json({ success: false, message: "the password dosent match" }));
+            return next(res.json({ success: false, message: "The password doesn't match" }));
         } else {
             user.password = req.body.password;
             user.resetPasswordToken = undefined;
@@ -124,13 +124,13 @@ async function resetPassword(req, res, next) {
 async function updatePassword(req, res, next) {
     const user = await User.findById(req.user._id).select("+password");
     if (!user.comparePassword(req.body.oldPassword)) {
-        return next(res.json({ message: "the passwords did not match", success: false }));
+        return next(res.json({ message: "The passwords did not match", success: false }));
     }
     if (req.body.newPassword !== req.body.confirmPassword) {
-        return next(res.json({ success: false, message: "the new password conform password did not match" }));
+        return next(res.json({ success: false, message: "The new password and the confirm password did not match" }));
     }
     if (req.body.newPassword.length < 8) {
-        return next(res.json({ success: false, message: "the password legth should be 8 charactors long" }));
+        return next(res.json({ success: false, message: "The password legth should be 8 characters long" }));
     }
     user.password = req.body.newPassword;
     await user.save();
@@ -217,7 +217,7 @@ async function acceptRequest(req, res, next) {
 
         const currTeamSize = order.team.filter((member) => member.status === "accepted").length;
         if (order.event.teamSize === currTeamSize) {
-            return res.json({ success: false, message: "team size is maximum" });
+            return res.json({ success: false, message: "Team size is maximum" });
         }
 
         const userIndex = order.team.findIndex((member) => member.user._id == req.body.userId);
@@ -260,4 +260,4 @@ const rejectRequest = async (req, res, next) => {
 };
 
 
-export { login, register, getUserDetails, fergotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout, updateProfile, getOtherUsersDetails };
+export { login, register, getUserDetails, forgotPassword, resetPassword, updatePassword, sendRequest, acceptRequest, rejectRequest, getAllUsers, logout, updateProfile, getOtherUsersDetails };

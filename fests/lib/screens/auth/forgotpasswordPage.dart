@@ -3,14 +3,14 @@ import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class FergotPasswordScreen extends StatefulWidget {
-  const FergotPasswordScreen({super.key});
+class forgotPasswordScreen extends StatefulWidget {
+  const forgotPasswordScreen({super.key});
 
   @override
-  State<FergotPasswordScreen> createState() => _FergotPasswordScreenState();
+  State<forgotPasswordScreen> createState() => _forgotPasswordScreenState();
 }
 
-class _FergotPasswordScreenState extends State<FergotPasswordScreen> {
+class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
   final _emailController = TextEditingController();
   @override
   void dispose() {
@@ -24,7 +24,7 @@ class _FergotPasswordScreenState extends State<FergotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Heading(str: "Fergot Password"),
+        title: Heading(str: "Forgot Password"),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(
@@ -80,13 +80,13 @@ class _FergotPasswordScreenState extends State<FergotPasswordScreen> {
                               isEnabled = false;
                             });
                             final response = await http.postBody(
-                                "$baseUrl/user/password/fergotpassword",
+                                "$baseUrl/user/password/forgotpassword",
                                 "application/json",
                                 {"email": _emailController.text});
                             _emailController.text = "";
                             if (response["success"]) {
                               Fluttertoast.showToast(
-                                  msg: "sent recovery e mail",
+                                  msg: "Sent recovery Email",
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   backgroundColor: Colors.green,

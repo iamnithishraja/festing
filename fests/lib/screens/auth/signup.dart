@@ -142,7 +142,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                               return 'email is a required feild';
                             }
                             if (!value.contains('@')) {
-                              return 'enter valid e mail';
+                              return 'enter valid Email';
                             }
                           },
                           decoration: InputDecoration(
@@ -155,7 +155,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                               Icons.email,
                               color: Colors.white,
                             ),
-                            label: Text("E Mail",
+                            label: Text("E-Mail",
                                 style: TextStyle(color: Colors.white)),
                             fillColor: Colors.white,
                             focusedBorder: OutlineInputBorder(
@@ -177,7 +177,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                               return 'password is a required feild';
                             }
                             if (value.length < 8) {
-                              return 'plase enter at least 8 charectors';
+                              return 'Please enter at least 8 characters';
                             }
                           },
                           obscureText: _isPasswordVisible ? false : true,

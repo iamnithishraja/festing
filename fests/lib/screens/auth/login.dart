@@ -1,4 +1,4 @@
-import 'package:fests/screens/auth/fergotpasswordPage.dart';
+import 'package:fests/screens/auth/forgotpasswordPage.dart';
 import 'package:fests/screens/auth/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
@@ -62,10 +62,10 @@ class _LoginState extends ConsumerState<Login> {
                           },
                           validator: (value) {
                             if (value == null || value.trim() == '') {
-                              return 'email is a required feild';
+                              return 'E-mail is a required feild';
                             }
                             if (!value.contains('@')) {
-                              return 'enter valid e mail';
+                              return 'Enter valid E-mail';
                             }
                           },
                           decoration: InputDecoration(
@@ -78,7 +78,7 @@ class _LoginState extends ConsumerState<Login> {
                               Icons.email,
                               color: Colors.white,
                             ),
-                            label: Text("E Mail",
+                            label: Text("E-Mail",
                                 style: TextStyle(color: Colors.white)),
                             fillColor: Colors.white,
                             focusedBorder: OutlineInputBorder(
@@ -97,10 +97,10 @@ class _LoginState extends ConsumerState<Login> {
                           },
                           validator: (value) {
                             if (value == null || value.trim() == '') {
-                              return 'password is a required feild';
+                              return 'Password is a required feild';
                             }
                             if (value.length < 8) {
-                              return 'plase enter at least 8 charectors';
+                              return 'Please enter at least 8 characters';
                             }
                           },
                           obscureText: _isPasswordVisible ? false : true,
@@ -149,10 +149,10 @@ class _LoginState extends ConsumerState<Login> {
                               onPressed: () =>
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
-                                        FergotPasswordScreen(),
+                                        forgotPasswordScreen(),
                                   )),
                               child: SubHeading(
-                                str: "fergot password?",
+                                str: "Forgot password ?",
                                 color: Colors.blueAccent,
                               )),
                         ],
@@ -179,7 +179,7 @@ class _LoginState extends ConsumerState<Login> {
                 ),
               ),
               SubHeading(
-                str: "Dont Have Account?",
+                str: "Don't Have an Account ?",
               ),
               TextButton(
                   onPressed: widget.callBack,
