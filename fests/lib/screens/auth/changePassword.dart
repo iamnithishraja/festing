@@ -94,7 +94,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             return 'password is a required feild';
                           }
                           if (value.length < 8) {
-                            return 'plase enter at least 8 charectors';
+                            return 'please enter at least 8 characters';
                           }
                         },
                         obscureText: _isPasswordVisible ? false : true,
@@ -147,7 +147,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             return 'Confirm password is a required feild';
                           }
                           if (value.length < 8) {
-                            return 'plase enter at least 8 charectors';
+                            return 'please enter at least 8 characters';
                           }
                         },
                         obscureText: _isConfirmPasswordVisible ? false : true,

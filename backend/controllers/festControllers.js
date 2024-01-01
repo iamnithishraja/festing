@@ -50,7 +50,7 @@ async function createFest(req, res, next) {
             broture: broture,
             poster: poster
         });
-        res.json({ success: true, fest, message: "succefully created new fest" });
+        res.json({ success: true, fest, message: "Successfully created a new fest" });
     } catch (error) {
         console.log(error.message);
         res.json({ success: false, message: error.message });
@@ -141,7 +141,7 @@ async function createEvent(req, res, next) {
         });
         fest.events.push(event._id);
         await Fest.findByIdAndUpdate(fest.id, fest);
-        res.json({ success: true, message: "event added successfully" });
+        res.json({ success: true, message: "Event added successfully" });
     } catch (error) {
         console.log(error.message);
         res.json({ success: false, message: error.message });
