@@ -53,6 +53,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.9
+  upgrader: ^8.4.0
 
   
 dev_dependencies:

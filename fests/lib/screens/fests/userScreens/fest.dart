@@ -10,6 +10,7 @@ import 'package:fests/models/user.dart';
 import 'package:fests/models/fest.dart';
 import 'package:fests/providers/userProvider.dart';
 import 'package:fests/widgets/listItems/fest_item.dart';
+import 'package:upgrader/upgrader.dart';
 
 class Fests extends ConsumerStatefulWidget {
   const Fests({super.key});
@@ -86,35 +87,37 @@ class _FestsState extends ConsumerState<Fests> {
               ))
         ],
       ),
-      body: FutureBuilder(
-          future: ref.read(festProvider.notifier).getFests(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              );
-            }
-            final fests = ref.watch(festProvider) as List;
-            return RefreshIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-                onRefresh: ref.read(festProvider.notifier).getFests,
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                            onLongPress: () => longPress(fests[index]),
-                            child: FestItem(fests[index]));
-                      },
-                      itemCount: fests.length,
-                    )));
-          }),
+      body: UpgradeAlert(
+        child: FutureBuilder(
+            future: ref.read(festProvider.notifier).getFests(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                );
+              }
+              final fests = ref.watch(festProvider) as List;
+              return RefreshIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  onRefresh: ref.read(festProvider.notifier).getFests,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onLongPress: () => longPress(fests[index]),
+                              child: FestItem(fests[index]));
+                        },
+                        itemCount: fests.length,
+                      )));
+            }),
+      ),
       floatingActionButton: (user.role == "admin")
           ? FloatingActionButton(
               child: Icon(Icons.add),
