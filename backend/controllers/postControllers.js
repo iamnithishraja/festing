@@ -1,6 +1,7 @@
 import cloudinary from "cloudinary";
 import Post from "../models/postModel.js";
 import ApiFeatures from "../utils/apiFeatures.js";
+import Category from "../models/categoryModel.js";
 import User from "../models/userModel.js";
 
 async function uploadImage(image, folder_name) {
@@ -219,20 +220,53 @@ async function commentOnPost(req, res, next) {
     }
 }
 
-
-let categories = ["others"];
 async function getCategories(req, res, next) {
-    res.json({ success: true, categories });
+    try{
+        const Allcategories = await Category.findOne({});
+        if(!Allcategories){
+            const newCategoryObj = new Category({categories:["others"]});
+            await newCategoryObj.save();
+            res.json({ success: true, categories:newCategoryObj.categories});
+        }
+        else{
+            res.json({ success: true, categories:Allcategories.categories});
+        }
+    }catch(error){
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
 }
 
 async function addCategory(req, res, next) {
-    categories.push(req.params.id);
-    res.json({ success: true, categories });
+    try{
+        const {id} = req.params;
+        const Allcategories = await Category.findOne({});
+        if(!Allcategories){
+            const newCategoryObj = new Category({categories:["others",id]});
+            await newCategoryObj.save();
+            res.json({ success: true, categories:newCategoryObj.categories});
+        }
+        else{
+            Allcategories.categories.push(`${id}`);
+            await Allcategories.save();
+            res.json({ success: true, categories:Allcategories.categories});
+        }
+    }catch(error){
+        console.log(error);
+        res.json({success: false, message: error.message});
+}
 }
 
 async function removeAllCategories(req, res, next) {
-    categories = ["others"];
-    res.json({ success: true, categories });
+    try{
+        await Category.findOneAndDelete({});
+        const newCategoryObj = new Category({categories:["others"]});
+        await newCategoryObj.save();
+        res.json({ success: true, categories:newCategoryObj.categories});
+    }catch(error){
+        console.log(error);
+        res.json({success: false, message: error.message});
+    };
 }
 
 export { commentOnPost, createPost, deletePost, getFeedPosts as getPosts, likeAndUnlikePost, updatePost, getUserPosts, getCategories, addCategory, removeAllCategories, getComments };
