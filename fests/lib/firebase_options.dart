@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '95107159948',
     projectId: 'fests-3bc00',
     storageBucket: 'fests-3bc00.appspot.com',
-    iosBundleId: 'com.example.fests',
+    iosBundleId: 'com.nithish.fests',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,6 +76,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '95107159948',
     projectId: 'fests-3bc00',
     storageBucket: 'fests-3bc00.appspot.com',
-    iosBundleId: 'com.example.fests.RunnerTests',
+    iosBundleId: 'com.nithish.fests.RunnerTests',
   );
 }

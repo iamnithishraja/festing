@@ -153,6 +153,9 @@ dist
 # Docusaurus cache and generated files
 .docusaurus
 
+key.properties
+upload-keystore.jks
+
 # Serverless directories
 .serverless/
 firebase.config.json

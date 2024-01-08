@@ -22,7 +22,10 @@ const festSchema = new mongoose.Schema({
     location: {
         type: String, required: [true, "Please Enter Location Name"],
     },
-
+    isArchived:{   
+        type:Boolean,
+        default:false,
+    },
     poster: {
         public_id: {
             type: String,
