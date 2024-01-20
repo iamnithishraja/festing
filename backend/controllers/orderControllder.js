@@ -6,7 +6,6 @@ import sendEmail from "../utils/sendEmail.js";
 
 
 async function createOrder(req, res, next) {
-    try {
         const order = await Order.create({
             event: req.body.eventId,
             team: [{ user: req.body.userId, status: "accepted" }]
@@ -16,14 +15,9 @@ async function createOrder(req, res, next) {
         const toSend = await Order.findById(order.id).populate("team.user").populate("event")
         await User.findByIdAndUpdate(user._id, user);
         res.json({ success: true, "order": toSend });
-    } catch (err) {
-        console.log(err);
-        res.json({ success: false });
-    }
 }
 
 async function getAllOrders(req, res, next) {
-    try {
         const user = await User.findById(req.params.id);
         const myEvents = user.myEvents;
         const orders = [];
@@ -34,31 +28,24 @@ async function getAllOrders(req, res, next) {
         }
         orders.sort((a, b) => a.event["schedule"][0][0] - b.event["schedule"][0][0]);
         res.json({ success: true, orders });
-    } catch (err) {
-        console.log(err.message);
-        res.json({ success: false });
-    }
 }
 
 async function getAllOrdersByEvent(req, res, next) {
-    try {
         const orders = await Order.find({ event: req.params.id }).populate("team.user").populate("event");
         res.json({ success: true, orders });
-    } catch (error) {
-        console.log(err);
-        res.json({ success: false });
-    }
 }
 
 async function deleteOrder(req, res, next) {
-    try {
         const order = await Order.findById(req.params.id).populate('event');
         for (let j = 0; j < order.team.length; j++) {
             const userId = order.team[j].user;
             const user = await User.findById(userId);
             user.myEvents = user.myEvents.filter((userorder) => userorder.toString() != order._id.toString());
             await User.findByIdAndUpdate(userId, user);
-            const message = `Your team has been rejected for ${order.event.name}, for not meeting the Qualifications .`;
+            // The below code takes care of the '.' in the event names .
+            let eventName = order.event.name;
+            eventName = eventName[eventName.length-1] === '.' ? eventName.slice(0,eventName.length-1) : eventName ;
+            const message = `Your team has been rejected for ${eventName}, for not meeting the Qualifications .`;
             sendEmail({
                 email: user.email,
                 subject: "Festing App Team Rejection",
@@ -67,10 +54,6 @@ async function deleteOrder(req, res, next) {
         }
         await Order.deleteOne({ _id: req.params.id });
         res.json({ success: true, message: "deleted this team" });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false });
-    }
 }
 
 

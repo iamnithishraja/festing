@@ -26,5 +26,10 @@ app.use("/post", postRouter);
 app.get("/", (req, res, next) => {
     res.json({ success: true, message: "working", pid: process.pid });
 });
+app.use((err,req,res,next)=>{
+    console.log(err.message);
+    res.json({ success: false, message: err.message });
+    next();
+})
 
 export default app;

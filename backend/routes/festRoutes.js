@@ -1,25 +1,26 @@
 import express from "express";
 import { isAuthenticatedUser, authoriseRoles } from "../middlewares/auth.js";
 import { getEligibleFests, getArchivedFests, getAllevents, getFest, updateFest, deleteFest, createEvent, updateEvent, getEvent, deleteEvent, createFest } from "../controllers/festControllers.js";
+import catchAsync from "../utils/catchAsync.js";
 
 
 const festRouter = express.Router();
 
-festRouter.route("/eligible").get(isAuthenticatedUser, getEligibleFests);
-festRouter.route("/archived").get(isAuthenticatedUser, getArchivedFests);
+festRouter.route("/eligible").get(isAuthenticatedUser, catchAsync(getEligibleFests));
+festRouter.route("/archived").get(isAuthenticatedUser, catchAsync(getArchivedFests));
 
-festRouter.route("/events/:id").get(isAuthenticatedUser, getAllevents);
+festRouter.route("/events/:id").get(isAuthenticatedUser, catchAsync(getAllevents));
 
 festRouter.route("/fest")
-    .post(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), createFest)
-    .get(isAuthenticatedUser,isAuthenticatedUser, getFest)
-    .put(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), updateFest)
-    .delete(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), deleteFest);
+    .post(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(createFest))
+    .get(isAuthenticatedUser,isAuthenticatedUser, catchAsync(getFest))
+    .put(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(updateFest))
+    .delete(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(deleteFest));
 
 festRouter.route("/event")
-    .get(isAuthenticatedUser, getEvent)
-    .post(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), createEvent)
-    .put(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), updateEvent)
-    .delete(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), deleteEvent);
+    .get(isAuthenticatedUser, catchAsync(getEvent))
+    .post(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(createEvent))
+    .put(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(updateEvent))
+    .delete(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next, "admin"), catchAsync(deleteEvent));
 
 export { festRouter };

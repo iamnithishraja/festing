@@ -31,20 +31,14 @@ async function uploadImage(image, folder_name) {
 }
 
 async function createPost(req, res, next) {
-    try {
         const newPost = { caption: req.body.caption };
         newPost.image = await uploadImage(req.files.image.data, req.body.category);
         newPost.owner = req.user.id;
         await Post.create(newPost);
         res.json({ success: true });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function likeAndUnlikePost(req, res, next) {
-    try {
         const post = await Post.findById(req.params.id);
 
         if (!post) {
@@ -75,14 +69,9 @@ async function likeAndUnlikePost(req, res, next) {
                 message: "Post Liked",
             });
         }
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function getUserPosts(req, res, next) {
-    try {
         const toSerch = req.query.id ? req.query.id : req.user.id;
         const tempPosts = Post.find({ owner: toSerch }).sort({ createdAt: -1 });
         const apiFeatures = new ApiFeatures(tempPosts, req.query).pagination(4);
@@ -93,14 +82,9 @@ async function getUserPosts(req, res, next) {
             reqPosts.push({ _id: post._id, image: post.image.url, numLikes: post.likes.length, numComments: post.comments.length, caption: post.caption, isLiked: post.likes.includes(req.user._id) });
         }
         res.json({ success: true, posts: [...reqPosts] });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false });
-    }
 }
 
 async function deletePost(req, res, next) {
-    try {
         const post = await Post.findById(req.params.id);
 
         if (!post) {
@@ -123,14 +107,9 @@ async function deletePost(req, res, next) {
             success: true,
             message: "Post deleted",
         });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function getFeedPosts(req, res, next) {
-    try {
         const tempPosts = Post.find().sort({ createdAt: -1 }).populate("owner");
         const apiFeatures = new ApiFeatures(tempPosts, req.query).pagination(10);
         const posts = await apiFeatures.query;
@@ -140,14 +119,9 @@ async function getFeedPosts(req, res, next) {
             reqPosts.push({ _id: post._id, image: post.image.url, numLikes: post.likes.length, numComments: post.comments.length, caption: post.caption, owner: post.owner._id, dp: post.owner.avatar.url, name: post.owner.name, rollno: post.owner.rollno, isLiked: post.likes.includes(req.user._id) });
         }
         res.json({ success: true, posts: [...reqPosts] });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false });
-    }
 }
 
 async function getComments(req, res, next) {
-    try {
         const post = await Post.findById(req.params.id).populate("comments.user");
         const comments = [];
 
@@ -160,24 +134,13 @@ async function getComments(req, res, next) {
         });
 
         res.json({ success: true, comments });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function updatePost(req, res, next) {
-    try {
-
         res.json({ success: true });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false });
-    }
 }
 
 async function commentOnPost(req, res, next) {
-    try {
         const post = await Post.findById(req.params.id);
 
         if (!post) {
@@ -214,14 +177,9 @@ async function commentOnPost(req, res, next) {
                 message: "Comment added",
             });
         }
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function getCategories(req, res, next) {
-    try{
         const Allcategories = await Category.findOne({});
         if(!Allcategories){
             const newCategoryObj = new Category({categories:["others"]});
@@ -231,14 +189,9 @@ async function getCategories(req, res, next) {
         else{
             res.json({ success: true, categories:Allcategories.categories});
         }
-    }catch(error){
-        console.log(error);
-        res.json({success: false, message: error.message});
-    }
 }
 
 async function addCategory(req, res, next) {
-    try{
         const {id} = req.params;
         const Allcategories = await Category.findOne({});
         if(!Allcategories){
@@ -251,22 +204,13 @@ async function addCategory(req, res, next) {
             await Allcategories.save();
             res.json({ success: true, categories:Allcategories.categories});
         }
-    }catch(error){
-        console.log(error);
-        res.json({success: false, message: error.message});
-}
 }
 
 async function removeAllCategories(req, res, next) {
-    try{
         await Category.findOneAndDelete({});
         const newCategoryObj = new Category({categories:["others"]});
         await newCategoryObj.save();
         res.json({ success: true, categories:newCategoryObj.categories});
-    }catch(error){
-        console.log(error);
-        res.json({success: false, message: error.message});
-    };
 }
 
 export { commentOnPost, createPost, deletePost, getFeedPosts as getPosts, likeAndUnlikePost, updatePost, getUserPosts, getCategories, addCategory, removeAllCategories, getComments };
