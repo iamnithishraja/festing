@@ -32,7 +32,6 @@ async function register(req, res) {
 
 
 async function login(req, res) {
-    try {
         const { email, password } = req.body;
         const user = await User.findOne({ email: email }).select("+password").exec();
         if (!user) {
@@ -51,30 +50,17 @@ async function login(req, res) {
                 sendTocken(user, res);
             }
         }
-    } catch (e) {
-        res.json({ success: false, message: e.message });
-    }
 }
 
 
 async function getUserDetails(req, res, next) {
-    try {
         const user = await User.findById(req.user._id).populate("myEvents");
         res.json({ success: true, user });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function getOtherUsersDetails(req, res, next) {
-    try {
         const user = await User.findById(req.params.id);
         res.json({ success: true, user });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
 }
 
 async function forgotPassword(req, res, next) {
@@ -138,7 +124,6 @@ async function updatePassword(req, res, next) {
 }
 
 async function updateProfile(req, res, next) {
-    try {
         const newUserData = req.body;
         const user = await User.findById(req.user.id);
         const temp = JSON.parse(req.body["socialLinks"]);
@@ -152,38 +137,23 @@ async function updateProfile(req, res, next) {
         }
         await User.findByIdAndUpdate(req.user.id, newUserData);
         res.json({ success: true });
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false });
-    }
 }
 
 async function getAllUsers(req, res, next) {
-    try {
         const apiFeatures = new ApiFeatures(User.find().sort({ name: 1 }), req.query).search().pagination(100);
         const users = await apiFeatures.query;
         // await users.sort((a, b) => a.name.localeCompare(b.name));
         res.json({ success: true, users });
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false });
-    }
 }
 
 async function logout(req, res) {
-    try {
         res.cookie("token", null, {
             expires: new Date(Date.now()),
             httpOnly: true
         }).json({ success: true, message: "logged out successfully" });
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false });
-    }
 }
 
 async function sendRequest(req, res, next) {
-    try {
         // order id user id
         const order = await Order.findById(req.body.orderId);
         const idx = order.team.findIndex((member) => member.user.toString() == req.body.userId);
@@ -203,14 +173,9 @@ async function sendRequest(req, res, next) {
         await User.findByIdAndUpdate(req.body.userId, user);
 
         res.json({ success: true });
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false });
-    }
 }
 
 async function acceptRequest(req, res, next) {
-    try {
         const order = await Order.findById(req.body.orderId)
             .populate("team.user")
             .populate("event");
@@ -227,14 +192,9 @@ async function acceptRequest(req, res, next) {
 
         await Order.findByIdAndUpdate(req.body.orderId, order);
         res.json({ success: true });
-    } catch (error) {
-        console.error(error.message);
-        res.json({ success: false });
-    }
 }
 
 const rejectRequest = async (req, res, next) => {
-    try {
         const orderId = req.body.orderId;
         const userId = req.body.userId;
 
@@ -253,10 +213,6 @@ const rejectRequest = async (req, res, next) => {
         await User.findByIdAndUpdate(userId, user);
 
         res.json({ success: true });
-    } catch (error) {
-        console.error(error.message);
-        res.json({ success: false });
-    }
 };
 
 

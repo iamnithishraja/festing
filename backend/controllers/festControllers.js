@@ -36,7 +36,6 @@ async function uploadImage(image, folder_name) {
 }
 
 async function createFest(req, res, next) {
-  try {
     cloudinary.v2.api.create_folder(req.body.name);
 
     const poster = await uploadImage(req.files.poster.data, req.body.name);
@@ -69,46 +68,27 @@ async function createFest(req, res, next) {
       fest,
       message: "Successfully created a new fest",
     });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function getEligibleFests(req, res, next) {
-  try {
     const fests = await Fest.find({ isArchived: false });
     res.send({ success: true, fests });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function getArchivedFests(req, res, next) {
-  try {
     const fests = await Fest.find({ endDate: { $lt: Date.now() } });
     res.send({ success: true, fests });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function getAllevents(req, res, next) {
-  try {
     const fest = await Fest.findById(req.params.id).populate("events");
     const events = fest.events;
     res.json({ success: true, events });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function getFest(req, res, next) {}
 
 async function updateFest(req, res, next) {
-  try {
     const fest = await Fest.findById(req.body.id);
     if (req.files != null) {
       cloudinary.v2.uploader.destroy(fest.poster.public_id);
@@ -119,26 +99,16 @@ async function updateFest(req, res, next) {
     }
     const new_fest = await Fest.findByIdAndUpdate(req.body.id, req.body);
     res.json({ success: true, new_fest });
-  } catch (e) {
-    console.log(e.message);
-    res.json({ success: false, message: e.message });
-  }
 }
 
 async function deleteFest(req, res, next) {
-  try {
     const fest = await Fest.findById(req.body.id);
     await cloudinary.v2.uploader.destroy(fest.poster.public_id);
     await Fest.findByIdAndDelete(req.body.id);
     res.send({ success: true });
-  } catch (e) {
-    console.log(e.message);
-    res.json({ success: false, message: e.message });
-  }
 }
 
 async function createEvent(req, res, next) {
-  try {
     const fest = await Fest.findById(req.body.festId);
     const poster = await uploadImage(
       req.files.poster.data,
@@ -167,14 +137,9 @@ async function createEvent(req, res, next) {
     fest.events.push(event._id);
     await Fest.findByIdAndUpdate(fest.id, fest);
     res.json({ success: true, message: "Event added successfully" });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function updateEvent(req, res, next) {
-  try {
     const event = await Event.findById(req.body.eventId);
     if (req.files != null) {
       await cloudinary.v2.uploader.destroy(event.poster.public_id);
@@ -195,16 +160,11 @@ async function updateEvent(req, res, next) {
       schedule: schedule,
     });
     res.json({ success: true, new_event });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
-  }
 }
 
 async function getEvent(req, res, next) {}
 
 async function deleteEvent(req, res, next) {
-  try {
     const event = await Event.findById(req.body.id);
     await cloudinary.v2.uploader.destroy(event.poster.public_id);
     await Event.findByIdAndDelete(req.body.id);
@@ -222,10 +182,6 @@ async function deleteEvent(req, res, next) {
     }
     await Order.deleteMany({ event: req.body.id });
     res.send({ success: true });
-  } catch (e) {
-    console.log(e.message);
-    res.json({ success: false, message: e.message });
-  }
 }
 
 export {
