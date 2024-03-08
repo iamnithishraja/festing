@@ -17,14 +17,24 @@ class _LoginState extends ConsumerState<Login> {
   bool _isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
   String? _email, _password;
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      ref.read(userProvider.notifier).login(_email!.trim(), _password!.trim());
-    }
-  }
+  var loginButtonEnabled = true;
 
   @override
   Widget build(BuildContext context) {
+    void _login() async{
+      setState(() {
+        loginButtonEnabled = false;
+      });
+      if (_formKey.currentState!.validate()) {
+        await ref
+            .read(userProvider.notifier)
+            .login(_email!.trim(), _password!.trim());
+      }
+      setState(() {
+        loginButtonEnabled = true;
+      });
+    }
+
     return Scaffold(
       body: Container(
         decoration:
@@ -165,7 +175,7 @@ class _LoginState extends ConsumerState<Login> {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: _login,
+                          onPressed: loginButtonEnabled ? _login : null,
                           child: Heading(
                             str: "Log In",
                             fontSize: 28,

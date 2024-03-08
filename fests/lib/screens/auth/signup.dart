@@ -18,6 +18,7 @@ class _SignUpState extends ConsumerState<SignUp> {
   bool _isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
   String? _name, _email, _rollno, _password;
+  bool _isSignupButtonEnabled = true;
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
@@ -25,15 +26,21 @@ class _SignUpState extends ConsumerState<SignUp> {
       Navigator.of(context).pushReplacementNamed(Fests().route);
     }
 
-    void _onSignUp() {
+    void _onSignUp() async {
+      setState(() {
+        _isSignupButtonEnabled = false;
+      });
       if (_formKey.currentState!.validate()) {
-        ref.read(userProvider.notifier).register(
+        await ref.read(userProvider.notifier).register(
               _name!.trim(),
               _email!.trim(),
               _rollno!.trim().toUpperCase(),
               _password!.trim(),
             );
       }
+      setState(() {
+        _isSignupButtonEnabled = true;
+      });
     }
 
     return Scaffold(
@@ -103,6 +110,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _rollno = value;
                           },
@@ -229,7 +237,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: _onSignUp,
+                          onPressed: _isSignupButtonEnabled ? _onSignUp : null,
                           child: Heading(
                             str: "Sign Up",
                             fontSize: 28,

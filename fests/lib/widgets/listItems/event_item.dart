@@ -12,9 +12,23 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-class EventItem extends ConsumerWidget {
+class EventItem extends ConsumerStatefulWidget {
   EventItem(this.event, {super.key});
   Event event;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return EventItemState();
+  }
+}
+
+class EventItemState extends ConsumerState<EventItem> {
+  late Event event;
+  @override
+  void initState() {
+    event = widget.event;
+    super.initState();
+  }
 
   String formattedDateTime(DateTime item) {
     return item.hour >= 12
@@ -24,8 +38,9 @@ class EventItem extends ConsumerWidget {
         : "${item.hour.toString()}:${item.minute.toString()} am";
   }
 
+  bool _isConfirmButtonEnabled = true;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     void viewSchedule() {
       showDialog(
         context: context,
@@ -68,6 +83,9 @@ class EventItem extends ConsumerWidget {
     }
 
     void completeRegistration() async {
+      setState(() {
+        _isConfirmButtonEnabled = false;
+      });
       Order order = await ref
           .read(OrdersProvider.notifier)
           .createOrder(eventId: event.id, userId: ref.watch(userProvider)!.id);
@@ -81,10 +99,16 @@ class EventItem extends ConsumerWidget {
             timeInSecForIosWeb: 4,
             textColor: Colors.white,
             fontSize: 16.0);
+        setState(() {
+          _isConfirmButtonEnabled = true;
+        });
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => serchTeamMates(order),
         ));
+        setState(() {
+          _isConfirmButtonEnabled = true;
+        });
       }
     }
 
@@ -299,7 +323,9 @@ class EventItem extends ConsumerWidget {
                                           color: Colors.red,
                                         )),
                                     TextButton(
-                                        onPressed: completeRegistration,
+                                        onPressed: _isConfirmButtonEnabled
+                                            ? completeRegistration
+                                            : null,
                                         child: SubHeading(
                                           str: "Confirm",
                                           color: Colors.green,
