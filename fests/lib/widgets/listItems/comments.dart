@@ -83,6 +83,7 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
+                      style: TextStyle(color: Colors.white),
                       controller: _commentController,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(

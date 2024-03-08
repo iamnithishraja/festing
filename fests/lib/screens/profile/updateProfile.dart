@@ -113,6 +113,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user!.name,
                           onChanged: (value) {
                             _name = value;
@@ -148,6 +149,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user.rollno,
                           onChanged: (value) {
                             _rollno = value;
@@ -181,6 +183,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user.email,
                           onChanged: (value) {
                             _email = value;
@@ -217,6 +220,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           maxLines: 5,
                           initialValue: user.bio,
                           onChanged: (value) {
@@ -248,6 +252,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user.socialLinks != null
                               ? user.socialLinks!["github"]
                               : "",
@@ -278,6 +283,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user.socialLinks != null
                               ? user.socialLinks!["linkdlin"]
                               : "",
@@ -308,6 +314,7 @@ class _LoginState extends ConsumerState<UpdateProfile> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: user.socialLinks != null
                               ? user.socialLinks!["codingPlatform"]
                               : "",

@@ -90,6 +90,7 @@ flutter:
     - assets/images/placeholder.jpg
     - assets/images/profile.png
     - assets/images/splashimage.png
+    - shorebird.yaml
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

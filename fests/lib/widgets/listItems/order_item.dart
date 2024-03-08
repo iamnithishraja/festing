@@ -44,6 +44,10 @@ class _OrderItemState extends ConsumerState<OrderItem>
         : "${item.hour.toString()}:${item.minute.toString()} am";
   }
 
+  bool _isAcceptButtonEnabled = true;
+  bool _isRejectButtonEnabled = true;
+  bool _isResendRequestButtonEnabled = true;
+  bool _isRemoveButtonEnabled = true;
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userProvider);
@@ -93,11 +97,21 @@ class _OrderItemState extends ConsumerState<OrderItem>
                               color: Colors.red,
                             )),
                         TextButton(
-                            onPressed: () {
-                              ref.read(allUsersProvider.notifier).rejectRequest(
-                                  order.id, teamMember.keys.first.id);
-                              Navigator.of(context).pop();
-                            },
+                            onPressed: _isRemoveButtonEnabled
+                                ? () async {
+                                    setState(() {
+                                      _isRemoveButtonEnabled = false;
+                                    });
+                                    await ref
+                                        .read(allUsersProvider.notifier)
+                                        .rejectRequest(
+                                            order.id, teamMember.keys.first.id);
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _isRemoveButtonEnabled = true;
+                                    });
+                                  }
+                                : null,
                             child: SubHeading(
                               str: "Confirm",
                               color: Colors.green,
@@ -122,11 +136,20 @@ class _OrderItemState extends ConsumerState<OrderItem>
             trailing: isEqualWaiting
                 ? Container(width: 0, height: 0)
                 : TextButton(
-                    onPressed: () async {
-                      await ref
-                          .read(allUsersProvider.notifier)
-                          .sendRequest(order.id, teamMember.keys.first.id);
-                    },
+                    onPressed: _isResendRequestButtonEnabled
+                        ? () async {
+                            setState(() {
+                              _isResendRequestButtonEnabled = false;
+                            });
+                            await ref
+                                .read(allUsersProvider.notifier)
+                                .sendRequest(
+                                    order.id, teamMember.keys.first.id);
+                            setState(() {
+                              _isResendRequestButtonEnabled = true;
+                            });
+                          }
+                        : null,
                     child: SubHeading(
                       fontSize: 12,
                       str: "Resend\nRequest",
@@ -178,7 +201,10 @@ class _OrderItemState extends ConsumerState<OrderItem>
       );
     }
 
-    void _acceptRequest() {
+    void _acceptRequest() async {
+      setState(() {
+        _isAcceptButtonEnabled = false;
+      });
       for (var accepted_order in widget.acceptedOrders) {
         if (accepted_order.event.name == event.name) {
           Fluttertoast.cancel();
@@ -194,11 +220,24 @@ class _OrderItemState extends ConsumerState<OrderItem>
         }
       }
 
-      ref.read(allUsersProvider.notifier).acceptRequest(order.id, user!.id);
+      await ref
+          .read(allUsersProvider.notifier)
+          .acceptRequest(order.id, user!.id);
+      setState(() {
+        _isAcceptButtonEnabled = true;
+      });
     }
 
-    void _rejectRequest() {
-      ref.read(allUsersProvider.notifier).rejectRequest(order.id, user!.id);
+    void _rejectRequest() async {
+      setState(() {
+        _isRejectButtonEnabled = false;
+      });
+      await ref
+          .read(allUsersProvider.notifier)
+          .rejectRequest(order.id, user!.id);
+      setState(() {
+        _isRejectButtonEnabled = true;
+      });
     }
 
     DateTime startDate = event.scedule.first[0];
@@ -428,7 +467,9 @@ class _OrderItemState extends ConsumerState<OrderItem>
                                   width: double.infinity,
                                   height: 60,
                                   child: ElevatedButton(
-                                    onPressed: _acceptRequest,
+                                    onPressed: _isAcceptButtonEnabled
+                                        ? _acceptRequest
+                                        : null,
                                     child: Heading(
                                       str: "Accept",
                                       fontSize: 28,
@@ -447,7 +488,9 @@ class _OrderItemState extends ConsumerState<OrderItem>
                                   width: double.infinity,
                                   height: 60,
                                   child: ElevatedButton(
-                                    onPressed: _rejectRequest,
+                                    onPressed: _isRejectButtonEnabled
+                                        ? _rejectRequest
+                                        : null,
                                     child: Heading(
                                       str: "Reject",
                                       fontSize: 28,

@@ -9,10 +9,9 @@ import orderRouter from "./routes/orderRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
 
 const app = express();
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true, origin: "https://fests-3bc00.web.app" }));
 app.use(bodyParser.json({ limit: "35mb" }));
 app.use(cookieParser());
-app.options("*", cors());
 
 app.use(
   bodyParser.urlencoded({
