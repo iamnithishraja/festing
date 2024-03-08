@@ -82,18 +82,23 @@ class _EventsState extends ConsumerState<OrdersScreen>
               physics: NeverScrollableScrollPhysics(),
               controller: _tabController1,
               children: [
-                Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return OrderItem(orders[index], false);
-                      },
-                      itemCount: myevents.length,
-                    )),
+                RefreshIndicator(
+                  onRefresh: () =>
+                      ref.read(OrdersProvider.notifier).getAllOrders(user.id),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return OrderItem(
+                              myevents[index], false, myevents);
+                        },
+                        itemCount: myevents.length,
+                      )),
+                ),
                 RefreshIndicator(
                   color: Theme.of(context).colorScheme.secondary,
                   onRefresh: () =>
@@ -106,7 +111,8 @@ class _EventsState extends ConsumerState<OrdersScreen>
                       height: MediaQuery.of(context).size.height,
                       child: ListView.builder(
                         itemBuilder: (context, index) {
-                          return OrderItem(orders[index], true);
+                          return OrderItem(
+                              requests[index], true, myevents);
                         },
                         itemCount: requests.length,
                       )),

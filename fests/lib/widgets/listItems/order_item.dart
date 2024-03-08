@@ -7,16 +7,19 @@ import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 
 //TODO: addd approve reject from admin side
 
 class OrderItem extends ConsumerStatefulWidget {
-  OrderItem(this.order, this.isEqualWaiting, {this.isViewedAsList, super.key});
+  OrderItem(this.order, this.isEqualWaiting, this.acceptedOrders,
+      {this.isViewedAsList, super.key});
   final Order order;
   final bool isEqualWaiting;
   bool? isViewedAsList = true;
+  List acceptedOrders;
   @override
   ConsumerState<OrderItem> createState() => _OrderItemState();
 }
@@ -176,6 +179,21 @@ class _OrderItemState extends ConsumerState<OrderItem>
     }
 
     void _acceptRequest() {
+      for (var accepted_order in widget.acceptedOrders) {
+        if (accepted_order.event.name == event.name) {
+          Fluttertoast.cancel();
+          Fluttertoast.showToast(
+              msg: "your alredy in another team",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              timeInSecForIosWeb: 3,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          return;
+        }
+      }
+
       ref.read(allUsersProvider.notifier).acceptRequest(order.id, user!.id);
     }
 
@@ -445,28 +463,31 @@ class _OrderItemState extends ConsumerState<OrderItem>
                               )
                             ],
                           )
-                        : SizedBox(
-                            width: double.infinity,
-                            height: 60,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => serchTeamMates(order),
+                        : event.teamSize == 1
+                            ? Container()
+                            : SizedBox(
+                                width: double.infinity,
+                                height: 60,
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          serchTeamMates(order),
+                                    ),
+                                  ),
+                                  child: Heading(
+                                    str: "Invite More People",
+                                    fontSize: 28,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: Heading(
-                                str: "Invite More People",
-                                fontSize: 28,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                            ),
-                          )
+                              )
               ],
             ),
           )

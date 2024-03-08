@@ -72,6 +72,7 @@ class _EventTeamsScreenState extends ConsumerState<EventTeamsScreen> {
                 child: OrderItem(
                   orders[index],
                   false,
+                  [],
                   isViewedAsList: true,
                 ),
               );

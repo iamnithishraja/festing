@@ -15,7 +15,7 @@ class userNotifier extends StateNotifier<User?> {
   Future<void> tryAutoLogin() async {
     final response =
         await http.autoLoginRequest("$baseUrl/user/me", 'application/json');
-
+    print(response);
     Map<String, String> mp = {
       if (response["user"]["socialLinks"] != null &&
           response["user"]["socialLinks"]["github"] != null)
@@ -83,7 +83,7 @@ class userNotifier extends StateNotifier<User?> {
         'password': password,
       };
 
-      final response = await http.postBody(
+      final response = await http.postBody(   
         '$baseUrl/user/register',
         'application/json',
         requestBody,

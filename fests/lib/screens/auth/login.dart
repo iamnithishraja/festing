@@ -57,6 +57,7 @@ class _LoginState extends ConsumerState<Login> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _email = value;
                           },
@@ -78,8 +79,10 @@ class _LoginState extends ConsumerState<Login> {
                               Icons.email,
                               color: Colors.white,
                             ),
-                            label: Text("E-Mail",
-                                style: TextStyle(color: Colors.white)),
+                            label: Text(
+                              "E-Mail",
+                              style: TextStyle(color: Colors.white),
+                            ),
                             fillColor: Colors.white,
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
@@ -92,6 +95,7 @@ class _LoginState extends ConsumerState<Login> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _password = value;
                           },

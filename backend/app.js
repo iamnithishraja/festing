@@ -9,22 +9,27 @@ import orderRouter from "./routes/orderRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json({ limit: '35mb' }));
+app.use(cors({ credentials: true, origin: true }));
+app.use(bodyParser.json({ limit: "35mb" }));
 app.use(cookieParser());
+app.options("*", cors());
 
-app.use(bodyParser.urlencoded({ extended: true, limit: '35mb', parameterLimit: 50000 }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "35mb",
+    parameterLimit: 50000,
+  })
+);
 app.use(fileUpload());
 
-
-
-app.use('/user', userRouter);
-app.use('/fests', festRouter);
+app.use("/user", userRouter);
+app.use("/fests", festRouter);
 app.use("/orders", orderRouter);
 app.use("/post", postRouter);
 
 app.get("/", (req, res, next) => {
-    res.json({ success: true, message: "working", pid: process.pid });
+  res.json({ success: true, message: "working", pid: process.pid });
 });
 
 export default app;

@@ -71,9 +71,21 @@ class EventItem extends ConsumerWidget {
       Order order = await ref
           .read(OrdersProvider.notifier)
           .createOrder(eventId: event.id, userId: ref.watch(userProvider)!.id);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => serchTeamMates(order),
-      ));
+      if (order.event.teamSize == 1) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        Fluttertoast.showToast(
+            msg: "Registration completed successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            timeInSecForIosWeb: 4,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => serchTeamMates(order),
+        ));
+      }
     }
 
     bool isRegistered() {

@@ -68,6 +68,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _name = value;
                           },
@@ -134,6 +135,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _email = value;
                           },
@@ -169,6 +171,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _password = value;
                           },

@@ -45,6 +45,7 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: TextField(
+                    style: TextStyle(color: Colors.white),
                     controller: _emailController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
