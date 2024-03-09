@@ -7,7 +7,7 @@ async function isAuthenticatedUser(req, res, next) {
     try {
         const token = req.cookies.token;
         if (!token) {
-            res.json({ success: false, message: undefined });
+            res.json({ success: false, message: "no token sent" });
         } else {
             const decoded_data = jsonwebtoken.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded_data.id);

@@ -7,6 +7,7 @@ import { festRouter } from "./routes/festRoutes.js";
 import cors from "cors";
 import orderRouter from "./routes/orderRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
+import path from "path";
 
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
@@ -27,8 +28,9 @@ app.use("/fests", festRouter);
 app.use("/orders", orderRouter);
 app.use("/post", postRouter);
 
-app.get("/", (req, res, next) => {
-  res.json({ success: true, message: "working", pid: process.pid });
+app.use(express.static(path.join(process.cwd(), "/frontend")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "/frontend/index.html"));
 });
 
 export default app;

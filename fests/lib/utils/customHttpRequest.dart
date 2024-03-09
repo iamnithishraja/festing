@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_interop';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
@@ -21,7 +20,7 @@ class CustomHttp {
           BaseOptions(
             connectTimeout: Duration(days: 1),
             receiveTimeout: Duration(days: 1),
-            sendTimeout: Duration(days: 1),  
+            sendTimeout: Duration(days: 1),
             responseType: ResponseType.plain,
             followRedirects: false,
             validateStatus: (status) {
