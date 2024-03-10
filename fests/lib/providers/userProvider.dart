@@ -294,7 +294,7 @@ class usersNotifier extends StateNotifier<List<User>> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      ref.read(OrdersProvider.notifier).getAllOrders(userId);
+      await ref.read(OrdersProvider.notifier).getAllOrders(userId);
     } else {
       Fluttertoast.cancel();
       Fluttertoast.showToast(

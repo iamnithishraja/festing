@@ -1,49 +1,27 @@
 import 'dart:convert';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
-import 'dart:io';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:fests/globals/constants.dart';
 
-class CustomHttp {
-  final dio = kIsWeb
-      ? DioForBrowser(BaseOptions(
-          connectTimeout: Duration(days: 1),
-          receiveTimeout: Duration(days: 1),
-          headers: {
-            "Accept": "application/json",
-          },
-        ))
-      : Dio(
-          BaseOptions(
-            connectTimeout: Duration(days: 1),
-            receiveTimeout: Duration(days: 1),
-            sendTimeout: Duration(days: 1),
-            responseType: ResponseType.plain,
-            followRedirects: false,
-            validateStatus: (status) {
-              return true;
-            },
-          ),
-        );
+CustomHttp getInstanceDio() => CustomHttpWeb();
+
+class CustomHttpWeb implements CustomHttp {
+  final dio = DioForBrowser(BaseOptions(
+    connectTimeout: Duration(days: 1),
+    receiveTimeout: Duration(days: 1),
+    headers: {
+      "Accept": "application/json",
+    },
+  ));
+
+  @override
   Future<void> prepareJar() async {
-    if (kIsWeb) {
-      var adapter = BrowserHttpClientAdapter();
-      adapter.withCredentials = true;
-      dio.httpClientAdapter = adapter;
-    } else {
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      final String appDocPath = appDocDir.path;
-      final jar = PersistCookieJar(
-        ignoreExpires: true,
-        storage: FileStorage(appDocPath + "/.cookies/"),
-      );
-      dio.interceptors.add(CookieManager(jar));
-    }
+    var adapter = BrowserHttpClientAdapter();
+    adapter.withCredentials = true;
+    dio.httpClientAdapter = adapter;
   }
 
+  @override
   Future<Map> autoLoginRequest(String url, String contentType) async {
     await prepareJar();
     final response = await dio.get(
@@ -53,6 +31,7 @@ class CustomHttp {
     return json.decode(json.encode(response.data)) as Map;
   }
 
+  @override
   Future<Map> get(String url, String contentType) async {
     final response = await dio.get(
       url,
@@ -61,6 +40,7 @@ class CustomHttp {
     return json.decode(json.encode(response.data)) as Map;
   }
 
+  @override
   Future<Map> makeSerchQuery(String url, String contentType) async {
     final response = await dio.get(
       url,
@@ -69,6 +49,7 @@ class CustomHttp {
     return json.decode(json.encode(response.data)) as Map;
   }
 
+  @override
   Future<Map> postBody(String url, String contentType, Map body) async {
     final response = await dio.post(
       url,
@@ -78,6 +59,7 @@ class CustomHttp {
     return json.decode(json.encode(response.data)) as Map;
   }
 
+  @override
   Future<Map?> postForm(String url, String contentType, FormData body) async {
     try {
       final response = await dio.post(
@@ -94,6 +76,7 @@ class CustomHttp {
     }
   }
 
+  @override
   Future<Map?> putForm(String url, String contentType, FormData body) async {
     try {
       final response = await dio.put(
@@ -110,6 +93,7 @@ class CustomHttp {
     }
   }
 
+  @override
   Future<Map?> delete(
       String url, String contentType, Map<String, dynamic> body) async {
     try {
@@ -124,6 +108,7 @@ class CustomHttp {
     }
   }
 
+  @override
   Future<Map> postParams(
       String url, String contentType, Map<String, dynamic> params) async {
     final response = await dio.post(url,

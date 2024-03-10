@@ -82,36 +82,6 @@ class EventItemState extends ConsumerState<EventItem> {
       );
     }
 
-    void completeRegistration() async {
-      setState(() {
-        _isConfirmButtonEnabled = false;
-      });
-      Order order = await ref
-          .read(OrdersProvider.notifier)
-          .createOrder(eventId: event.id, userId: ref.watch(userProvider)!.id);
-      if (order.event.teamSize == 1) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        Fluttertoast.showToast(
-            msg: "Registration completed successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.green,
-            timeInSecForIosWeb: 4,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        setState(() {
-          _isConfirmButtonEnabled = true;
-        });
-      } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => serchTeamMates(order),
-        ));
-        setState(() {
-          _isConfirmButtonEnabled = true;
-        });
-      }
-    }
-
     bool isRegistered() {
       final orders = ref.watch(OrdersProvider);
       for (var order in orders) {
@@ -303,34 +273,92 @@ class EventItemState extends ConsumerState<EventItem> {
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.white)),
-                                  title: Heading(str: "Confirm Registration"),
-                                  shadowColor:
-                                      Theme.of(context).colorScheme.secondary,
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  content: SubHeading(
-                                      str:
-                                          "you sure you want to register for this event?"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: SubHeading(
-                                          str: "Cancel",
-                                          color: Colors.red,
-                                        )),
-                                    TextButton(
+                              builder: (context) =>
+                                  StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white)),
+                                    title: Heading(str: "Confirm Registration"),
+                                    shadowColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    content: SubHeading(
+                                        str:
+                                            "you sure you want to register for this event?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: SubHeading(
+                                            str: "Cancel",
+                                            color: Colors.red,
+                                          )),
+                                      TextButton(
                                         onPressed: _isConfirmButtonEnabled
-                                            ? completeRegistration
+                                            ? () async {
+                                                setState(() {
+                                                  _isConfirmButtonEnabled =
+                                                      false;
+                                                });
+                                                Order order = await ref
+                                                    .read(
+                                                        OrdersProvider.notifier)
+                                                    .createOrder(
+                                                        eventId: event.id,
+                                                        userId: ref
+                                                            .watch(
+                                                                userProvider)!
+                                                            .id);
+                                                if (order.event.teamSize == 1) {
+                                                  Navigator.of(context)
+                                                      .popUntil((route) =>
+                                                          route.isFirst);
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Registration completed successfully",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      timeInSecForIosWeb: 4,
+                                                      textColor: Colors.white,
+                                                      fontSize: 16.0);
+                                                  setState(() {
+                                                    _isConfirmButtonEnabled =
+                                                        true;
+                                                  });
+                                                } else {
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                          MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        serchTeamMates(order),
+                                                  ));
+                                                  setState(() {
+                                                    _isConfirmButtonEnabled =
+                                                        true;
+                                                  });
+                                                }
+                                              }
                                             : null,
-                                        child: SubHeading(
-                                          str: "Confirm",
-                                          color: Colors.green,
-                                        ))
-                                  ]),
+                                        child: _isConfirmButtonEnabled
+                                            ? SubHeading(
+                                                str: "Confirm",
+                                                color: Colors.green,
+                                              )
+                                            : CircularProgressIndicator(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
+                                              ),
+                                      )
+                                    ]);
+                              }),
                             );
                           },
                           child: Heading(

@@ -21,7 +21,7 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   Widget build(BuildContext context) {
-    void _login() async{
+    void _login() async {
       setState(() {
         loginButtonEnabled = false;
       });
@@ -176,10 +176,15 @@ class _LoginState extends ConsumerState<Login> {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: loginButtonEnabled ? _login : null,
-                          child: Heading(
-                            str: "Log In",
-                            fontSize: 28,
-                          ),
+                          child: loginButtonEnabled
+                              ? Heading(
+                                  str: "Log In",
+                                  fontSize: 28,
+                                )
+                              : CircularProgressIndicator(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromRGBO(97, 63, 216, 1),
                             shape: RoundedRectangleBorder(

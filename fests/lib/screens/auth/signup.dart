@@ -238,10 +238,15 @@ class _SignUpState extends ConsumerState<SignUp> {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: _isSignupButtonEnabled ? _onSignUp : null,
-                          child: Heading(
-                            str: "Sign Up",
-                            fontSize: 28,
-                          ),
+                          child: _isSignupButtonEnabled
+                              ? Heading(
+                                  str: "Sign Up",
+                                  fontSize: 28,
+                                )
+                              : CircularProgressIndicator(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromRGBO(97, 63, 216, 1),
                             shape: RoundedRectangleBorder(

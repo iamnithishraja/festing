@@ -79,44 +79,53 @@ class _OrderItemState extends ConsumerState<OrderItem>
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.white)),
-                      title: Heading(str: "Are You Sure?"),
-                      shadowColor: Theme.of(context).colorScheme.secondary,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      content: SubHeading(
-                          str:
-                              "this person will be removed out of the team.\nuse this only when nessasary"),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: SubHeading(
-                              str: "Cancel",
-                              color: Colors.red,
-                            )),
-                        TextButton(
-                            onPressed: _isRemoveButtonEnabled
-                                ? () async {
-                                    setState(() {
-                                      _isRemoveButtonEnabled = false;
-                                    });
-                                    await ref
-                                        .read(allUsersProvider.notifier)
-                                        .rejectRequest(
-                                            order.id, teamMember.keys.first.id);
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _isRemoveButtonEnabled = true;
-                                    });
-                                  }
-                                : null,
-                            child: SubHeading(
-                              str: "Confirm",
-                              color: Colors.green,
-                            ))
-                      ]),
+                  builder: (context) =>
+                      StatefulBuilder(builder: (context, setState) {
+                    return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.white)),
+                        title: Heading(str: "Are You Sure?"),
+                        shadowColor: Theme.of(context).colorScheme.secondary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        content: SubHeading(
+                            str:
+                                "this person will be removed out of the team.\nuse this only when nessasary"),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: SubHeading(
+                                str: "Cancel",
+                                color: Colors.red,
+                              )),
+                          TextButton(
+                              onPressed: _isRemoveButtonEnabled
+                                  ? () async {
+                                      setState(() {
+                                        _isRemoveButtonEnabled = false;
+                                      });
+                                      await ref
+                                          .read(allUsersProvider.notifier)
+                                          .rejectRequest(order.id,
+                                              teamMember.keys.first.id);
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _isRemoveButtonEnabled = true;
+                                      });
+                                    }
+                                  : null,
+                              child: _isRemoveButtonEnabled
+                                  ? SubHeading(
+                                      str: "Confirm",
+                                      color: Colors.green,
+                                    )
+                                  : CircularProgressIndicator(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ))
+                        ]);
+                  }),
                 );
               },
               child: isEqualWaiting
@@ -150,11 +159,15 @@ class _OrderItemState extends ConsumerState<OrderItem>
                             });
                           }
                         : null,
-                    child: SubHeading(
-                      fontSize: 12,
-                      str: "Resend\nRequest",
-                      color: Colors.green,
-                    ),
+                    child: _isResendRequestButtonEnabled
+                        ? SubHeading(
+                            fontSize: 12,
+                            str: "Resend\nRequest",
+                            color: Colors.green,
+                          )
+                        : CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                   ),
           ),
         );
@@ -216,6 +229,9 @@ class _OrderItemState extends ConsumerState<OrderItem>
               timeInSecForIosWeb: 3,
               textColor: Colors.white,
               fontSize: 16.0);
+          setState(() {
+            _isAcceptButtonEnabled = true;
+          });
           return;
         }
       }
@@ -470,10 +486,16 @@ class _OrderItemState extends ConsumerState<OrderItem>
                                     onPressed: _isAcceptButtonEnabled
                                         ? _acceptRequest
                                         : null,
-                                    child: Heading(
-                                      str: "Accept",
-                                      fontSize: 28,
-                                    ),
+                                    child: _isAcceptButtonEnabled
+                                        ? Heading(
+                                            str: "Accept",
+                                            fontSize: 28,
+                                          )
+                                        : CircularProgressIndicator(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.green,
                                       shape: RoundedRectangleBorder(
@@ -491,10 +513,16 @@ class _OrderItemState extends ConsumerState<OrderItem>
                                     onPressed: _isRejectButtonEnabled
                                         ? _rejectRequest
                                         : null,
-                                    child: Heading(
-                                      str: "Reject",
-                                      fontSize: 28,
-                                    ),
+                                    child: _isRejectButtonEnabled
+                                        ? Heading(
+                                            str: "Reject",
+                                            fontSize: 28,
+                                          )
+                                        : CircularProgressIndicator(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
                                       shape: RoundedRectangleBorder(
