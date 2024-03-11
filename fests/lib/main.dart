@@ -5,7 +5,7 @@ import 'package:fests/providers/userProvider.dart';
 import 'package:fests/screens/auth/signup.dart';
 import 'package:fests/screens/others/splashScreen.dart';
 import 'package:fests/utils/notificationPusher.dart';
-import 'package:fests/widgets/tabs/tabs_conroller.dart';
+import 'package:fests/widgets/tabs/tabs_conroller.dart`';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './globals/theme.dart';
 import 'package:go_router/go_router.dart';
