@@ -7,8 +7,8 @@ import { festRouter } from "./routes/festRoutes.js";
 import cors from "cors";
 import orderRouter from "./routes/orderRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
-import { fileURLToPath } from 'url';
-import path,{ dirname } from 'path';
+import { fileURLToPath } from "url";
+import path, { dirname } from "path";
 
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
@@ -29,8 +29,7 @@ app.use("/fests", festRouter);
 app.use("/orders", orderRouter);
 app.use("/post", postRouter);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "/frontend")));
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/index.html"));
