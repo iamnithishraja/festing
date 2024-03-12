@@ -162,6 +162,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _collegeName = value;
                           },
@@ -196,6 +197,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _festName = value;
                           },
@@ -230,6 +232,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           maxLines: 8,
                           onChanged: (value) {
                             _description = value;
@@ -265,6 +268,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _collegeWebsite = value;
                           },
@@ -299,6 +303,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _festWebsite = value;
                           },
@@ -328,6 +333,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           validator: (value) {
                             if (value == null || value.trim() == '') {
                               return "cannot be empty";
@@ -362,6 +368,7 @@ class _CreateFestState extends ConsumerState<CreateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _location = value;
                           },

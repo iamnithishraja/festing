@@ -11,10 +11,12 @@ class Event {
     required this.teamSize,
     required this.venue,
     required this.scedule,
+    required this.isLimitedNumberOfTeams,
   });
   String id, name, description, image, category, venue;
   List<String> details;
   String? mapsLink;
   int price, teamSize;
+  bool isLimitedNumberOfTeams;
   List<List<DateTime>> scedule;
 }

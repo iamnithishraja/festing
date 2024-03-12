@@ -163,6 +163,7 @@ async function createEvent(req, res, next) {
       venue: req.body.venue,
       category: req.body.category,
       schedule: schedule,
+      isLimitedNumberOfTeams: req.body.isLimitedNumberOfTeams,
     });
     fest.events.push(event._id);
     await Fest.findByIdAndUpdate(fest.id, fest);

@@ -28,10 +28,7 @@ class orderNotifier extends StateNotifier<List<Order>> {
     final order = response["order"];
     List<List<DateTime>> schedule = [];
     for (List pair in order["event"]["schedule"]) {
-      schedule.add([
-        DateTime.parse(pair[0]),
-        DateTime.parse(pair[1])
-      ]);
+      schedule.add([DateTime.parse(pair[0]), DateTime.parse(pair[1])]);
     }
     final event = Event(
         id: order["event"]["_id"],
@@ -44,7 +41,8 @@ class orderNotifier extends StateNotifier<List<Order>> {
         teamSize: order["event"]["teamSize"],
         venue: order["event"]["venue"],
         scedule: schedule,
-        mapsLink: order["event"]["location"]);
+        mapsLink: order["event"]["location"],
+        isLimitedNumberOfTeams: order["event"]["isLimitedNumberOfTeams"]);
 
     List<Map<User, String>> team = [];
     for (final member in order["team"]) {
@@ -70,10 +68,7 @@ class orderNotifier extends StateNotifier<List<Order>> {
       for (var order in response["orders"]) {
         List<List<DateTime>> schedule = [];
         for (List pair in order["event"]["schedule"]) {
-          schedule.add([
-            DateTime.parse(pair[0]),
-            DateTime.parse(pair[1])
-          ]);
+          schedule.add([DateTime.parse(pair[0]), DateTime.parse(pair[1])]);
         }
         final event = Event(
             id: order["event"]["_id"],
@@ -86,7 +81,8 @@ class orderNotifier extends StateNotifier<List<Order>> {
             teamSize: order["event"]["teamSize"],
             venue: order["event"]["venue"],
             scedule: schedule,
-            mapsLink: order["event"]["location"]);
+            mapsLink: order["event"]["location"],
+            isLimitedNumberOfTeams: order["event"]["isLimitedNumberOfTeams"]);
         List<Map<User, String>> team = [];
         for (final member in order["team"]) {
           final user = User(
@@ -136,10 +132,7 @@ class eventOrderNotifier extends StateNotifier<List<Order>> {
       for (var order in response["orders"]) {
         List<List<DateTime>> schedule = [];
         for (List pair in order["event"]["schedule"]) {
-          schedule.add([
-            DateTime.parse(pair[0]),
-            DateTime.parse(pair[1])
-          ]);
+          schedule.add([DateTime.parse(pair[0]), DateTime.parse(pair[1])]);
         }
         final event = Event(
             id: order["event"]["_id"],
@@ -152,7 +145,8 @@ class eventOrderNotifier extends StateNotifier<List<Order>> {
             teamSize: order["event"]["teamSize"],
             venue: order["event"]["venue"],
             scedule: schedule,
-            mapsLink: order["event"]["location"]);
+            mapsLink: order["event"]["location"],
+            isLimitedNumberOfTeams: order["event"]["isLimitedNumberOfTeams"]);
         List<Map<User, String>> team = [];
         for (final member in order["team"]) {
           final user = User(

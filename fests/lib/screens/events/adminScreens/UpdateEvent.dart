@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/form/detailsAdder.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UpdateEvent extends ConsumerStatefulWidget {
   UpdateEvent(this.event, {super.key});
@@ -30,6 +31,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
   DateTime? _startDate, _endDate;
   List<List<DateTime>> timings = [];
   List<List<Widget>> timingsSetters = [];
+  late bool _isLimitedNumberOfTeams;
   @override
   Widget build(BuildContext context) {
     if (firstRun) {
@@ -37,6 +39,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
       _endDate = widget.event.scedule.last.last;
       timings = widget.event.scedule;
       details = widget.event.details as List<String>;
+      _isLimitedNumberOfTeams = widget.event.isLimitedNumberOfTeams;
     }
     void takePicture() async {
       final imagePicker = ImagePicker();
@@ -214,7 +217,8 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
           category: _category,
           venue: _venue,
           location: _location,
-          schedule: timings);
+          schedule: timings,
+          isLimitedNumberOfTeams: _isLimitedNumberOfTeams);
       details = [];
       Navigator.pop(context);
     }
@@ -248,6 +252,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.event.name,
                           onChanged: (value) {
                             _eventName = value;
@@ -283,6 +288,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.event.description,
                           maxLines: 5,
                           onChanged: (value) {
@@ -322,6 +328,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.event.category,
                           onChanged: (value) {
                             _category = value;
@@ -357,6 +364,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.event.venue,
                           onChanged: (value) {
                             _venue = value;
@@ -387,6 +395,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.event.mapsLink,
                           validator: (value) {
                             if (value == null || value.trim() == '') {
@@ -425,6 +434,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
+                                style: TextStyle(color: Colors.white),
                                 initialValue: widget.event.teamSize.toString(),
                                 onChanged: (value) {
                                   _teamSize = int.tryParse(value);
@@ -467,6 +477,7 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
+                                style: TextStyle(color: Colors.white),
                                 initialValue: widget.event.price.toString(),
                                 onChanged: (value) {
                                   _price = int.tryParse(value);
@@ -576,6 +587,20 @@ class _UpdateEventState extends ConsumerState<UpdateEvent> {
                                     ),
                             ),
                           )),
+                      Row(
+                        children: [
+                          SubHeading(str: "Limited number of Teams?"),
+                          Switch(
+                            value: _isLimitedNumberOfTeams,
+                            inactiveTrackColor: Colors.grey,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _isLimitedNumberOfTeams = value;
+                              });
+                            },
+                          )
+                        ],
+                      ),
                       SizedBox(
                         width: double.infinity,
                         height: 60,

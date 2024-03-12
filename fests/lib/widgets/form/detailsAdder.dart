@@ -50,6 +50,7 @@ class _DetailsAdderState extends State<DetailsAdder> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
+                      style: TextStyle(color: Colors.white),
                       initialValue: widget.controllers![idx],
                       onChanged: (value) => widget.controllers![idx] = value,
                       validator: (value) {

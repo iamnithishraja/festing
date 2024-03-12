@@ -5,6 +5,7 @@ import {
   getAllOrders,
   getAllOrdersByEvent,
   deleteOrder,
+  addCrParticipents,
 } from "../controllers/orderControllder.js";
 import { authoriseRoles } from "../middlewares/auth.js";
 
@@ -15,16 +16,20 @@ orderRouter
   .route("/event/:id")
   .get(
     isAuthenticatedUser,
-    (req, res, next) => authoriseRoles(req, res, next, "admin"),
+    (req, res, next) => authoriseRoles(req, res, next, "admin", "cr"),
     getAllOrdersByEvent
   )
   .delete(
     isAuthenticatedUser,
-    (req, res, next) => authoriseRoles(req, res, next, "admin"),
+    (req, res, next) => authoriseRoles(req, res, next, "admin", "cr"),
     deleteOrder
   );
 orderRouter
   .route("/event/cr/:id")
-  .get(isAuthenticatedUser, (req, res, next) => authoriseRoles(req, res, next,"cr"));
+  .post(
+    isAuthenticatedUser,
+    (req, res, next) => authoriseRoles(req, res, next, "cr"),
+    addCrParticipents
+  );
 
 export default orderRouter;

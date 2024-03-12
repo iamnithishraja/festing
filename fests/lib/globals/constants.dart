@@ -4,6 +4,7 @@ import 'package:fests/stub/stub.dart'
     if (dart.library.js) 'package:fests/utils/customHttpWeb.dart';
 
 const baseUrl = "https://festing.vercel.app";
+// const baseUrl = "http://localhost:3000";
 
 abstract class CustomHttp {
   Future<void> prepareJar();

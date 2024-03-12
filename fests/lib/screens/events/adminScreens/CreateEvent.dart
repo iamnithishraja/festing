@@ -1,6 +1,7 @@
 import 'package:fests/models/fest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
@@ -10,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
 import 'package:fests/widgets/form/detailsAdder.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CreateEvent extends ConsumerStatefulWidget {
   CreateEvent(this.fest, {super.key});
@@ -21,7 +23,7 @@ class CreateEvent extends ConsumerStatefulWidget {
 class _CreateEventState extends ConsumerState<CreateEvent> {
   final _formKey = GlobalKey<FormState>();
   String? _eventName, _description, _category, _venue, _location;
-
+  bool _isLimitedNumberOfTeams = false;
   int? _teamSize, _price;
   List<String>? details = [];
   File? selectedImage = null;
@@ -181,7 +183,8 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
           category: _category!,
           venue: _venue!,
           location: _location!,
-          schedule: timings);
+          schedule: timings,
+          isLimitedNumberOfTeams: _isLimitedNumberOfTeams);
       details = [];
       Navigator.pop(context);
     }
@@ -215,6 +218,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _eventName = value;
                           },
@@ -249,6 +253,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           maxLines: 5,
                           onChanged: (value) {
                             _description = value;
@@ -285,6 +290,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _category = value;
                           },
@@ -319,6 +325,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           onChanged: (value) {
                             _venue = value;
                           },
@@ -348,6 +355,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           validator: (value) {
                             if (value == null || value.trim() == '') {
                               return "location cannot be empty";
@@ -385,6 +393,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
+                                style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   _teamSize = int.tryParse(value);
                                 },
@@ -426,6 +435,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
+                                style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   _price = int.tryParse(value);
                                 },
@@ -539,6 +549,20 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                                     ),
                                   ),
                           )),
+                      Row(
+                        children: [
+                          SubHeading(str: "Limited number of Teams?"),
+                          Switch(
+                            value: _isLimitedNumberOfTeams,
+                            inactiveTrackColor: Colors.grey,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _isLimitedNumberOfTeams = value;
+                              });
+                            },
+                          )
+                        ],
+                      ),
                       SizedBox(
                         width: double.infinity,
                         height: 60,

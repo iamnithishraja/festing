@@ -7,6 +7,7 @@ import 'package:fests/providers/festProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fests/widgets/texts/sub_heading.dart';
 import 'package:fests/widgets/texts/heading_text.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UpdateFest extends ConsumerStatefulWidget {
   UpdateFest({required this.fest, super.key});
@@ -152,6 +153,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.collegeName,
                           onChanged: (value) {
                             _collegeName = value;
@@ -187,6 +189,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.festName,
                           onChanged: (value) {
                             _festName = value;
@@ -222,6 +225,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.description,
                           maxLines: 8,
                           onChanged: (value) {
@@ -258,6 +262,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.collegeWebsite,
                           onChanged: (value) {
                             _collegeWebsite = value;
@@ -293,6 +298,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.festWebsite,
                           onChanged: (value) {
                             _festWebsite = value;
@@ -323,6 +329,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.broture,
                           validator: (value) {
                             if (value == null || value.trim() == '') {
@@ -358,6 +365,7 @@ class _CreateFestState extends ConsumerState<UpdateFest> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           initialValue: widget.fest.location,
                           onChanged: (value) {
                             _location = value;

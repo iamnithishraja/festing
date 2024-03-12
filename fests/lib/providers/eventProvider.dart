@@ -21,6 +21,7 @@ class eventNotifier extends StateNotifier<List<Event>> {
     required String venue,
     required String location,
     required List<List<DateTime>> schedule,
+    required bool isLimitedNumberOfTeams,
   }) async {
     List<List<String>> scheduleStrings = [];
 
@@ -35,6 +36,7 @@ class eventNotifier extends StateNotifier<List<Event>> {
       "venue": venue.trim(),
       "category": category.trim(),
       "schedule": schedule,
+      "isLimitedNumberOfTeams": isLimitedNumberOfTeams,
       "poster": await MultipartFile.fromFile(poster.path,
           filename: poster.path.split("/").last),
     });
@@ -79,6 +81,7 @@ class eventNotifier extends StateNotifier<List<Event>> {
     required String? venue,
     required String? location,
     required List<List<DateTime>> schedule,
+    required bool isLimitedNumberOfTeams,
   }) async {
     FormData requestBody = FormData.fromMap({
       "eventId": eventId,
@@ -89,6 +92,7 @@ class eventNotifier extends StateNotifier<List<Event>> {
       if (teamSize != null) "teamSize": teamSize,
       if (location != null) "location": location.trim(),
       if (venue != null) "venue": venue.trim(),
+      "isLimitedNumberOfTeams": isLimitedNumberOfTeams,
       if (category != null) "category": category.trim(),
       "schedule": schedule,
       if (poster != null)
@@ -156,24 +160,23 @@ class eventNotifier extends StateNotifier<List<Event>> {
       for (final event in response["events"]) {
         List<List<DateTime>> schedule = [];
         for (List pair in event["schedule"]) {
-          schedule.add([
-            DateTime.parse(pair[0]),
-            DateTime.parse(pair[1])
-          ]);
+          schedule.add([DateTime.parse(pair[0]), DateTime.parse(pair[1])]);
         }
         events.add(Event(
-          id: event["_id"],
-          name: event["name"],
-          description: event["description"],
-          image: event["poster"]["url"],
-          category: event["category"],
-          details: [...event["details"]],
-          price: event["price"],
-          teamSize: event["teamSize"],
-          venue: event["venue"],
-          mapsLink: event["location"],
-          scedule: schedule,
-        ));
+            id: event["_id"],
+            name: event["name"],
+            description: event["description"],
+            image: event["poster"]["url"],
+            category: event["category"],
+            details: [...event["details"]],
+            price: event["price"],
+            teamSize: event["teamSize"],
+            venue: event["venue"],
+            mapsLink: event["location"],
+            scedule: schedule,
+            isLimitedNumberOfTeams: event["isLimitedNumberOfTeams"] == null
+                ? false
+                : event["isLimitedNumberOfTeams"]));
       }
       state = events;
     }
